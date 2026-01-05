@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <title>Let's get rolling</title>
+        <base href="/" />
+        
+        <link rel="stylesheet" href="/css/main.css" />
+        <link rel="stylesheet" href="/css/monokai_sublime.css">
+        <link rel="shortcut icon" href="/assets/favicon.ico" type="image/x-icon" />
+
+        <script src="/js/highlight.pack.js"></script>
+        <script src="/js/perso.js"></script>
+        <script> hljs.configure({tabReplace: '    '}); hljs.initHighlightingOnLoad();</script>
+    </head>
+
+
+    <body>
+
+        <!-- Header -->
+        <div class="header">
+            <a class="ots" href="http://www.opentechschool.org">OpenTechSchool</a>
+            <a href="/" id="titleHeader"> Artificial Intelligence for robots and swarms</a>
+        </div>
+      
+        <!-- Middle part -->
+        <div class="site">
+            <h1 class="title">Let's get rolling</h1>
+            <hr />
+
+	<!-- Left menu-->
+        <div class="aside" id="p_menu">
+            <a href="/">Home</a>
+            <ul>
+                  
+                    <li><a href="/pages/Setting-up.html">log_0 Setting up</a></li>
+                                  
+                    <li><a href="/pages/follow-the-line.html">log_1 Let's get rolling</a></li>
+                                                                                                                            
+            	<li><a href="/ref_lua.html">Ref Lua</a></li>
+            	<li><a href="/ref_argos.html">Ref ARGoS</a></li>
+            	<li><a href="/ref_setup.html">Ref Setup</a></li>
+            </ul>
+
+	    <center><hr width="60%"/></center>
+            <p class="madeBy">
+                Course by  <a href="https://romamile.com"> Roman </a>  
+            </p>
+        </div>
+	<!-- Contect of the page (from Markdown files) -->
+        <div class="main" id="p_content">
+            <p>Basic rule of life: if you don’t move, things are going to get pretty tough up the road… Now different creature and inventors found various way to solve that issue. To each hardware solution come a different software solutions; you don’t control a car, a 4 leg robot or a rocket the same way. In this section we’ll discover how to make your robot move and race for the stars. In this section, we will use this <a href="./assets/setup/setup_1.tar.gz">setup</a> with varying circuits.</p>
+
+<p><img src="./assets/marxbot.jpg" alt="picture of the marxbot" style="height:300px; float:right; margin:10px;" /></p>
+
+<h2 id="a--acting-one-robot-two-wheels">a)  Acting: One robot, two wheels</h2>
+
+<p>Actually, they are <em>treels</em>, a portmanteau neologism of wheels and trails. But for all your concern, you can see the robot as two wheels along the horizontal axis. Controlling your robot movement will go through setting the speed of each of those wheels. For that we use the <code class="language-plaintext highlighter-rouge">robot.wheels.set_velocity(leftSpeed, rightSpeed)</code> function which accept two values (yep, left and right speed) as parameters, both measured in cm/s. Positive values will make wheels roll forward, negative will make them roll backward. For instance, let’s make monomaniac robots:</p>
+
+<div class="language-lua highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">-- You will most of the time modify the step function</span>
+<span class="k">function</span> <span class="nf">step</span><span class="p">()</span>
+  <span class="n">robot</span><span class="p">.</span><span class="n">wheels</span><span class="p">.</span><span class="n">set_velocity</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span><span class="mi">20</span><span class="p">)</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>Is this this simple to control your robot? Yes it is. Try out various speed for each wheels to get a feeling of how the robots is moving. For instance:</p>
+
+<ul>
+  <li>moving straight and frontward is <em>leftSpeed = rightSpeed</em>. Try <code class="language-plaintext highlighter-rouge">robot.wheels.set_velocity(20,20)</code>.</li>
+  <li>turning right is <em>leftSpeed &gt; rightSpeed</em>. Try <code class="language-plaintext highlighter-rouge">robot.wheels.set_velocity(10,20)</code>.</li>
+  <li>turning on your self is <em>leftSpeed = -rightSpeed</em>. Try <code class="language-plaintext highlighter-rouge">robot.wheels.set_velocity(20,-20)</code>.</li>
+</ul>
+
+<p>While your moving is aimless for now, you can already think of a few stuff to do with it. Try to draw shapes with your robots for instance (while circle are pretty straight forward, try to draw triangles or more complex shapes!).</p>
+
+<p>By the way, here we told that the code must go in the step function (usually the case). It’ll be up to you usually to understand where to put the code (not too complex, I assure you) so you’ll need to think if the code is meant to be executed once (in <code class="language-plaintext highlighter-rouge">inti()</code>) or constantly (in <code class="language-plaintext highlighter-rouge">step()</code>).</p>
+
+<p>While setting directly the wheels’ speed does the job, it’s not really practical. If the robots think it terms of left and right speed, we don’t really. We would be more used to think in terms of moving forward/backward and turning, like when driving a car. So, we want to feed the robot forward speed and an angular speed, and it to translate it to left wheel speed and right wheel speed. Any idea? Try to imagine if you have only forward or angular, and then compose the two of them. Below are a possible solution, don’t look at it before you’ve tried out a little bit by yourself! To make it easier to use, we formalized it as a function. A good time if ever to see how they are coded in Lua!</p>
+
+<p><img src="./assets/robot_wheels.png" alt="picture of the differential drive" style="float:right; margin:10px;" /></p>
+
+<div class="language-lua highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">function</span> <span class="nf">driveAsCar</span><span class="p">(</span><span class="n">forwardSpeed</span><span class="p">,</span> <span class="n">angularSpeed</span><span class="p">)</span>
+
+  <span class="c1">-- We have an equal component, and an opposed one   </span>
+  <span class="n">leftSpeed</span>  <span class="o">=</span> <span class="n">forwardSpeed</span> <span class="o">-</span> <span class="n">angularSpeed</span>
+  <span class="n">rightSpeed</span> <span class="o">=</span> <span class="n">forwardSpeed</span> <span class="o">+</span> <span class="n">angularSpeed</span>
+
+  <span class="n">robot</span><span class="p">.</span><span class="n">wheels</span><span class="p">.</span><span class="n">set_velocity</span><span class="p">(</span><span class="n">leftSpeed</span><span class="p">,</span><span class="n">rightSpeed</span><span class="p">)</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>Pretty good. You can already use this formalism to get a better control over the robot. But we don’t want to pilot our robots as a car (from the inside) we want to give him orders (from the outside). We’ll see later on even better ways to command the robot. For now, we have more important issues, our robot is … a bit blind.</p>
+
+<p>##b) Sensing: Invisible touch</p>
+
+<p><img src="./assets/robot_proximity.png" alt="proximity sensor" style="float:right; margin:10px;" /></p>
+
+<p>Don’t take me wrong, I love driving straight in walls as much as the next guy, but it doesn’t really scream “intelligence”. Let’s try to level with a two years old and learn how to detect object and avoid them. For that purpose, the robots are equipped with proximity sensors that reacts to physical object on a 10cm range. There are 24 of them, spread in a ring around the robot body. Each readings is a table composed of an <em>angle</em> in radians and a <em>value</em> between 0 and 1. The angle defines the position of the sensors around the robot and the value is as high as the object is close (0 means nothing is detected). They are all contained in the <code class="language-plaintext highlighter-rouge">robot.proximity</code> table and can be accessed as follow:</p>
+
+<div class="language-lua highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">log</span><span class="p">(</span><span class="s2">"--Proximity Sensors--"</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span><span class="mi">24</span> <span class="k">do</span>
+    <span class="n">log</span><span class="p">(</span><span class="s2">"Angle: "</span> <span class="o">..</span> <span class="n">robot</span><span class="p">.</span><span class="n">proximity</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">angle</span> <span class="o">..</span>
+        <span class="s2">"Value: "</span> <span class="o">..</span> <span class="n">robot</span><span class="p">.</span><span class="n">proximity</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">value</span><span class="p">)</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>Ok, text log are pretty greate (they are), but are lacking a bit when you prefere overall view over precision. When you want the later, you might want to display the rays of the sensors. How? Well it’s explained in the <a href="./ref_setup.html#debug">setup ref material</a>!</p>
+
+<p>On of the most common usage for the proximity sensors is to avoid obstacles (object, walls, other robots…). We will see in next section a better way to use such information, but we can already make something simple out of it. Can you imagine what you need to do if you want to avoid obstacles, or at least react and turn in the right direction when encountering them? Try out by yourself, and once satisfied with the result you can compare your code to the following proposition:</p>
+
+<div class="language-lua highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="n">sensingLeft</span> <span class="o">=</span> <span class="n">robot</span><span class="p">.</span><span class="n">proximity</span><span class="p">[</span><span class="mi">3</span><span class="p">].</span><span class="n">value</span> <span class="o">+</span> <span class="n">robot</span><span class="p">.</span><span class="n">proximity</span><span class="p">[</span><span class="mi">4</span><span class="p">].</span><span class="n">value</span> <span class="o">+</span>
+              <span class="n">robot</span><span class="p">.</span><span class="n">proximity</span><span class="p">[</span><span class="mi">5</span><span class="p">].</span><span class="n">value</span> <span class="o">+</span> <span class="n">robot</span><span class="p">.</span><span class="n">proximity</span><span class="p">[</span><span class="mi">6</span><span class="p">].</span><span class="n">value</span>
+
+<span class="n">sensingRight</span> <span class="o">=</span> <span class="n">robot</span><span class="p">.</span><span class="n">proximity</span><span class="p">[</span><span class="mi">22</span><span class="p">].</span><span class="n">value</span><span class="o">+</span> <span class="n">robot</span><span class="p">.</span><span class="n">proximity</span><span class="p">[</span><span class="mi">21</span><span class="p">].</span><span class="n">value</span> <span class="o">+</span>
+               <span class="n">robot</span><span class="p">.</span><span class="n">proximity</span><span class="p">[</span><span class="mi">20</span><span class="p">].</span><span class="n">value</span> <span class="o">+</span> <span class="n">robot</span><span class="p">.</span><span class="n">proximity</span><span class="p">[</span><span class="mi">19</span><span class="p">].</span><span class="n">value</span>
+
+<span class="k">if</span><span class="p">(</span> <span class="n">sensingLeft</span> <span class="o">~=</span> <span class="mi">0</span> <span class="p">)</span> <span class="k">then</span>
+  <span class="n">driveAsCar</span><span class="p">(</span><span class="mi">7</span><span class="p">,</span><span class="o">-</span><span class="mi">3</span><span class="p">)</span>
+<span class="k">elseif</span><span class="p">(</span> <span class="n">sensingRight</span> <span class="o">~=</span> <span class="mi">0</span> <span class="p">)</span> <span class="k">then</span>
+  <span class="n">driveAsCar</span><span class="p">(</span><span class="mi">7</span><span class="p">,</span><span class="mi">3</span><span class="p">)</span>
+<span class="k">else</span>
+  <span class="n">driveAsCar</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>Great, now your robot can behave as brownian particle. You must (or at least should) be so proud of it. Well, anyway, if love is blind, so is your robot right now. Let’s change that. A bit. A liiiiitle bit.</p>
+
+<h2 id="c-sensing-ground-color">c) Sensing: ground color</h2>
+<p>Don’t expect 20/20 vision right from the start. Especially that our robots are meant to work as a team. As such, they are not pumped up with sensors all around and heavy computing power. They are simple (who said stupid?!) robots, with local sensing. And we’ll get as local as one can get: watching the ground under your own feet (well, treels). Or more precisely, detecting gray level of the ground’s color. This is very useful for reading marks on the ground, would that be for communication purpose, to emphasize areas of purpose, to guide robot over a path…</p>
+
+<p><img src="./assets/robot_motor_ground.png" alt="ground sensor" style="float:right; margin:10px;" /></p>
+
+<p>The robot have 4 grounds sensors on its lower part, each reading the brightness of the ground under them. They output a value between 0 and 1; 0 for black and 1 for white, shades of gray for values in between. Each readings is a table composed of <em>value</em> an <em>offset</em>. The value refers to the brightness and the offset to a vector for the position of the specific sensor stemming from the center of the robot. Since we have 4 sensors, we have 4 of those readings. They are all contained in the <code class="language-plaintext highlighter-rouge">robot.motor_ground</code> table and can be accessed as follow:</p>
+
+<div class="language-lua highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">log</span><span class="p">(</span><span class="s2">"--Ground Sensors--"</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span><span class="mi">4</span> <span class="k">do</span>
+    <span class="n">log</span><span class="p">(</span><span class="n">robot</span><span class="p">.</span><span class="n">motor_ground</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">value</span><span class="p">)</span>
+    <span class="n">log</span><span class="p">(</span><span class="n">robot</span><span class="p">.</span><span class="n">motor_ground</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">offset</span><span class="p">.</span><span class="n">x</span> <span class="o">..</span> <span class="s2">" "</span> <span class="o">..</span>
+        <span class="n">robot</span><span class="p">.</span><span class="n">motor_ground</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">offset</span><span class="p">.</span><span class="n">y</span><span class="p">)</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>In this section’s area are a few patterns on the ground, any idea on how to make your robot avoid them? Or get to them and stop? First you’ll need a robot that will explore a bit by itself. We’ll study this point better in next section, but you can already mash up something together with the <code class="language-plaintext highlighter-rouge">robot.random.uniform(min, max)</code> function. Try to implement one of both algorithm by yourself. Below is a solution for the stopping one:</p>
+
+<div class="language-lua highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">onSpot</span> <span class="o">=</span> <span class="kc">true</span>
+<span class="k">for</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span><span class="mi">4</span> <span class="k">do</span>
+    <span class="k">if</span><span class="p">(</span> <span class="n">robot</span><span class="p">.</span><span class="n">motor_ground</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">value</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">.</span><span class="mi">90</span> <span class="p">)</span> <span class="k">then</span> <span class="c1">-- not on a white spot</span>
+      <span class="n">onSpot</span> <span class="o">=</span> <span class="kc">false</span>
+    <span class="k">end</span>
+<span class="k">end</span>
+
+<span class="k">if</span><span class="p">(</span><span class="n">onSpot</span><span class="p">)</span> <span class="k">then</span>
+  <span class="n">driveAsCar</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span>
+<span class="k">else</span>
+  <span class="n">driveAsCar</span><span class="p">(</span><span class="n">robot</span><span class="p">.</span><span class="n">random</span><span class="p">.</span><span class="n">uniform</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">20</span><span class="p">),</span> <span class="n">robot</span><span class="p">.</span><span class="n">random</span><span class="p">.</span><span class="n">uniform</span><span class="p">(</span><span class="o">-</span><span class="mi">10</span><span class="p">,</span><span class="mi">10</span><span class="p">))</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>Ok, this is working but we have definitely too many robots trying to form platonic relationships with the arena walls. If not done already, you should mix that behavior with the avoiding one. Hard to mix both of them? Damn right it is, but lucky us, we’ll see in next section a glorious way to do so.</p>
+
+<h2 id="d-behaving-follow-the-line">d) Behaving: Follow the line</h2>
+<p>Ok, that is great. You can move, you can see where you are moving. What about coupling both and making you move following marks on the ground? This is actually a very classic algorithm which is solved both by first learners and highly skilled engineers, depending on the environment and precision/speed required. Our job is simple: we have a line, we want to follow it, when it’s straight (simple!) and when it’s turning (ergh…).</p>
+
+<div class="language-lua highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">-- OK, weirdly, for that one, left and right speed was more practical...</span>
+<span class="c1">-- Try to redo it with the car metaphor!</span>
+
+<span class="n">leftSpeed</span> <span class="o">=</span> <span class="mi">5</span>
+<span class="n">rightSpeed</span> <span class="o">=</span> <span class="mi">5</span>
+
+<span class="k">if</span><span class="p">(</span><span class="n">robot</span><span class="p">.</span><span class="n">motor_ground</span><span class="p">[</span><span class="mi">1</span><span class="p">].</span><span class="n">value</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">.</span><span class="mi">40</span><span class="p">)</span> <span class="k">then</span> <span class="c1">-- something on my left</span>
+  <span class="n">rightSpeed</span> <span class="o">=</span> <span class="o">-</span><span class="mi">3</span>
+<span class="k">end</span>
+
+<span class="k">if</span><span class="p">(</span><span class="n">robot</span><span class="p">.</span><span class="n">motor_ground</span><span class="p">[</span><span class="mi">4</span><span class="p">].</span><span class="n">value</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">.</span><span class="mi">40</span><span class="p">)</span> <span class="k">then</span> <span class="c1">-- something on my right</span>
+  <span class="n">leftSpeed</span> <span class="o">=</span> <span class="o">-</span><span class="mi">3</span>
+<span class="k">end</span>
+
+<span class="n">robot</span><span class="p">.</span><span class="n">wheels</span><span class="p">.</span><span class="n">set_velocity</span><span class="p">(</span><span class="n">leftSpeed</span><span class="p">,</span> <span class="n">rightSpeed</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>Neato but … hey, this is a rip off, it’s only working if the shape is convex! Well, all intelligence has its down. But why not giving a perfect solution? :( Well, first of all, you could say please. Second, I got something better: a game (or research, if you find it more sexy). Sometimes there is not one clear solution and that’s when there is competition. Which is super good for the bettering of the human knowledge. And also great to watch while getting some pop corn. Your job now is actually to better this behavior. Enough copy pasting (yep, we saw you!), now it’s time to work it out!</p>
+
+<h2 id="e-playing-everybody-race-now">e) Playing: Everybody race now!</h2>
+<p>Did the joke on copy pasting work? Anyway… As said, your job is to think of a behavior now (as in all following Playing sections). While you might get lost and search online, try your best to get new ideas and all, don’t forget one reference: this workshop. It’s not finished, far from it. You might have later one some useful tip to make your behavior even better!</p>
+
+<p>Our aim is to start a new genre of gaming, so no better time than now. Once your AI coded make it combat another AI by charging it and instantiating associated robots. My goodness, can one really do that? Yes we can, and it’s covered <a href="./ref_setup.html#ais">here</a>.</p>
+
+<p>You have know all the basic tools at hand to play this racing game. For circuits, you can have a look at all provided. Don’t hesitate to create your own by drawing over the background picture with your favorite image editor. How to add it up and modify the size of the arena up? All told in your favorite <a href=".//ref_setup.html#arena">reference material</a>!. Create the best AI to follow the track, modify on the fly its behavior would the line be long or very sneaky, keep in memory the places where you can go full speed and much much more to get the best time lap.</p>
+
+        </div>
+
+      </div>
+
+      <!-- Footer -->
+
+      <div class="footer">
+          <p> <a href="https://romamile.com">Roman Miletitch </a>  || Licensed under <a href="http://creativecommons.org/licenses/by-sa/3.0/">CC BY-SA 3.0</a>
+          </p>
+      </div>
+  </body>
+
+</html>

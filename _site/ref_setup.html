@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <title>Reference Setup</title>
+        <base href="/" />
+        
+        <link rel="stylesheet" href="/css/main.css" />
+        <link rel="stylesheet" href="/css/monokai_sublime.css">
+        <link rel="shortcut icon" href="/assets/favicon.ico" type="image/x-icon" />
+
+        <script src="/js/highlight.pack.js"></script>
+        <script src="/js/perso.js"></script>
+        <script> hljs.configure({tabReplace: '    '}); hljs.initHighlightingOnLoad();</script>
+    </head>
+
+
+    <body>
+
+        <!-- Header -->
+        <div class="header">
+            <a class="ots" href="http://www.opentechschool.org">OpenTechSchool</a>
+            <a href="/" id="titleHeader"> Artificial Intelligence for robots and swarms</a>
+        </div>
+      
+        <!-- Middle part -->
+        <div class="site">
+            <h1 class="title">Reference Setup</h1>
+            <hr />
+
+	<!-- Left menu-->
+        <div class="aside" id="p_menu">
+            <a href="/">Home</a>
+            <ul>
+                  
+                    <li><a href="/pages/Setting-up.html">log_0 Setting up</a></li>
+                                  
+                    <li><a href="/pages/follow-the-line.html">log_1 Let's get rolling</a></li>
+                                                                                                                            
+            	<li><a href="/ref_lua.html">Ref Lua</a></li>
+            	<li><a href="/ref_argos.html">Ref ARGoS</a></li>
+            	<li><a href="/ref_setup.html">Ref Setup</a></li>
+            </ul>
+
+	    <center><hr width="60%"/></center>
+            <p class="madeBy">
+                Course by  <a href="https://romamile.com"> Roman </a>  
+            </p>
+        </div>
+	<!-- Contect of the page (from Markdown files) -->
+        <div class="main" id="p_content">
+            <p>Here we go, deep in the belly of the beast! (Well, actually not really, there is C++ code hidden somewhere but unless you curious minds want more, this will stay the realm of yours truly.) Here we will get some insight about the setup file (the .argos one) that defines the experimental conditions. While this might appear as a whole mess at first (it isn’t), we won’t go too much in details. Only a few key points are of our worries. If you’re curious about more, you might want to check the comments in the files provided.</p>
+
+<p><span id="nbr_robots"></span>
+##a) Number of robots (or other entity)
+There are a few ways to spawn robots in ARGoS. In our case, we used a random spread with the <code class="language-plaintext highlighter-rouge">&lt;distribute&gt;</code> tag. If you look inside it, you’ll see an <code class="language-plaintext highlighter-rouge">&lt;entity&gt;</code> tag and a <code class="language-plaintext highlighter-rouge">quantity</code> parameter. As you can already guess, modifying this last one will change the number of robot (or whichever entity).</p>
+
+<p><span id="new_entities"></span>
+##b) Adding new entities
+As mentioned, a few ways to do so. The most versatile for us will be the distribute one. And easiest will be to actually copy past one of its usage and just modify the entity to fit our needs (mainly a box or a robot, done as shown in the same .argos file).</p>
+
+<p><span id="arena"></span>
+##c) Arena size and floor picture
+To change the picture on the floor (big up to the <a href="https://en.wikipedia.org/wiki/Magnavox_Odyssey">Odyssey</a>) you just change the file path of the <code class="language-plaintext highlighter-rouge">path</code> parameter of the <code class="language-plaintext highlighter-rouge">&lt;floor&gt;</code> tag.</p>
+
+<p>You will need to adjust the size of the arena accordingly, mainly it having the same ratio of width and height. To do so, you will need to modify the <code class="language-plaintext highlighter-rouge">size</code> parameter of the <code class="language-plaintext highlighter-rouge">&lt;arena&gt;</code> tag which takes in order width, height and depth (don’t change that last one unless you know what you’re doing!).</p>
+
+<p>Last, if you want to have a bounded arena, you will need to change the <code class="language-plaintext highlighter-rouge">size</code> and <code class="language-plaintext highlighter-rouge">position</code> of the walls defined as the 4 boxes that follows the <code class="language-plaintext highlighter-rouge">&lt;floor&gt;</code> tag.</p>
+
+<p><span id="debug"></span>
+##d) Showing rays for debugging purpose
+Sometimes you can actually graphically output something relevant about the sensors you’re using. Super useful for debugging purpose. In our case, this works for the proximity sensors and for the camera. If you want to see the rays then you just need to search for <code class="language-plaintext highlighter-rouge">showrays</code> parameter and change its value from “false” to “true”. Guess what you need to do to not see the rays?</p>
+
+<p>By the way: for proximity sensors, blue rays mean nothing is detected close by, purple is when something is detected (<code class="language-plaintext highlighter-rouge">value &gt; 0</code>); for camera, blue is when it’s in line of sight, purple is when it’s obstructed.</p>
+
+<p><span id="ais"></span>
+##e) Loading AIs from files
+Haha, now we’re playing. Who cares about coding, it’s all about letting the AIs do the job! As fun as the external editor is, you can also directly load AIs (unfortunately not updating the code used in the text editor, bummer… be sure to upload it if you want to update the code). This is a good way to run directly your favorite AI or even more important <strong>to make AIs battle each other</strong>. Yep.</p>
+
+<p>So, to load a specific .lua file as your AI, you just need to add a <code class="language-plaintext highlighter-rouge">script</code> parameter to the <code class="language-plaintext highlighter-rouge">&lt;params&gt;</code> tag inside your <code class="language-plaintext highlighter-rouge">&lt;lua_controller&gt;</code> tag. This would look like: <code class="language-plaintext highlighter-rouge">&lt;params script="./battleAI.lua"/&gt;</code>. Glorious.</p>
+
+<p>Now if you actually want to make Player Vs Player, or should I say, AI Vs AI, you need to do a few things. First, create another (or as many as wanted) <code class="language-plaintext highlighter-rouge">&lt;lua_controller&gt;</code> with different <code class="language-plaintext highlighter-rouge">id</code> parameters. you should have something along the lines of:</p>
+
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;controllers&gt;</span>
+
+    <span class="nt">&lt;lua_controller</span> <span class="na">id=</span><span class="s">"lua_AI_1"</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;actuators&gt;</span>
+            <span class="c">&lt;!-- bla bla bla your code --&gt;</span> 
+        <span class="nt">&lt;/actuators&gt;</span>
+        <span class="nt">&lt;sensors&gt;</span>
+            <span class="c">&lt;!-- bla bla bla your code --&gt;</span>
+        <span class="nt">&lt;/sensors&gt;</span>
+        <span class="nt">&lt;params</span><span class="err">/</span> <span class="na">script=</span><span class="s">"./AI_1.lua"</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;/lua_controller&gt;</span>
+
+    <span class="nt">&lt;lua_controller</span> <span class="na">id=</span><span class="s">"lua_AI_2"</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;actuators&gt;</span>
+            <span class="c">&lt;!-- bla bla bla your code --&gt;</span> 
+        <span class="nt">&lt;/actuators&gt;</span>
+        <span class="nt">&lt;sensors&gt;</span>
+            <span class="c">&lt;!-- bla bla bla your code --&gt;</span>
+        <span class="nt">&lt;/sensors&gt;</span>
+        <span class="nt">&lt;params</span> <span class="na">script=</span><span class="s">"./AI_2.lua"</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;/lua_controller&gt;</span>
+
+<span class="nt">&lt;/controllers&gt;</span>
+</code></pre></div></div>
+
+<p>Then you need to instantiate them (you spawned the brains, time to spawn the bodies). As mentioned twice already (fiou, last time), we’ll use a distribute tag (actually, you can straight call a <code class="language-plaintext highlighter-rouge">&lt;foot-bot&gt;</code> tag). Just copy paste previous whole <code class="language-plaintext highlighter-rouge">&lt;distribute&gt;</code> tag that were used on a foot bot entity, and just change the <code class="language-plaintext highlighter-rouge">config</code> parameter to the name of the behavior you just created in the beginning of this section (here, lua_AI_1 and lua_AI_2).</p>
+
+<p>Then sit back, relax, and enjoy the show!</p>
+
+        </div>
+
+      </div>
+
+      <!-- Footer -->
+
+      <div class="footer">
+          <p> <a href="https://romamile.com">Roman Miletitch </a>  || Licensed under <a href="http://creativecommons.org/licenses/by-sa/3.0/">CC BY-SA 3.0</a>
+          </p>
+      </div>
+  </body>
+
+</html>

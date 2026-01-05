@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <title>ARGoS Installation Tutorial</title>
+        <base href="/" />
+        
+        <link rel="stylesheet" href="/css/main.css" />
+        <link rel="stylesheet" href="/css/monokai_sublime.css">
+        <link rel="shortcut icon" href="/assets/favicon.ico" type="image/x-icon" />
+
+        <script src="/js/highlight.pack.js"></script>
+        <script src="/js/perso.js"></script>
+        <script> hljs.configure({tabReplace: '    '}); hljs.initHighlightingOnLoad();</script>
+    </head>
+
+
+    <body>
+
+        <!-- Header -->
+        <div class="header">
+            <a class="ots" href="http://www.opentechschool.org">OpenTechSchool</a>
+            <a href="/" id="titleHeader"> Artificial Intelligence for robots and swarms</a>
+        </div>
+      
+        <!-- Middle part -->
+        <div class="site">
+            <h1 class="title">ARGoS Installation Tutorial</h1>
+            <hr />
+
+	<!-- Left menu-->
+        <div class="aside" id="p_menu">
+            <a href="/">Home</a>
+            <ul>
+                  
+                    <li><a href="/pages/Setting-up.html">log_0 Setting up</a></li>
+                                  
+                    <li><a href="/pages/follow-the-line.html">log_1 Let's get rolling</a></li>
+                                                                                                                            
+            	<li><a href="/ref_lua.html">Ref Lua</a></li>
+            	<li><a href="/ref_argos.html">Ref ARGoS</a></li>
+            	<li><a href="/ref_setup.html">Ref Setup</a></li>
+            </ul>
+
+	    <center><hr width="60%"/></center>
+            <p class="madeBy">
+                Course by  <a href="https://romamile.com"> Roman </a>  
+            </p>
+        </div>
+	<!-- Contect of the page (from Markdown files) -->
+        <div class="main" id="p_content">
+            <p><em>Installation of ARGoS on Linux and Mac is straight forward, please refer to <a href="http://www.argos-sim.info/user_manual.php">argos-sim.info/user_manual.php</a> to install ARGoS. Please be sure to reach us if there are any issues.</em></p>
+
+<p>In this tutorial, we will show you how to install ARGoS on a Windows 11 machine. ARGoS is only native on Mac and specific flavors of Linux, so we will first need to install WSL (Windows Subsystem for Linux) that allows you to run any program that runs on Linux. Then, we will install ARGoS as if we were on Linux, and finish by making some modifications with libraries in order for ARGoS to reach them. You need to have administrative privilege on this machine, or at least to have high enough clearance to be able to install software on it. If you’re not sure, please check with your IT department or give the tutorial a go!</p>
+
+<p>The whole process takes less than half an hour, most of it spent waiting for downloads to finish. It is important that you come with ARGoS installed so we can make the best of the time spent together during the workshop. If you have any issues (or even just questions) during the installation process, be sure to reach me at roman.miletitch@mpi.nl. We will do our best to help you!</p>
+
+<h2>Step by step</h2>
+<p>The first step is to install WSL. For that you need to open the Power Shell (the command line of Windows). To do so, open your start menu (either by pressing on the Windows key of your keyboard, or by clicking on the start/window button in your task bar). Then, in the search text area, enter <strong>PowerShell</strong>, and then click on the associated program that should appear in the list.</p>
+
+<p>In the <strong>PowerShell</strong>, type the following command and run it (press enter) in order to install WSL:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>wsl <span class="nt">--install</span>
+</code></pre></div></div>
+<p>This should take between 2 and 5 minutes depending on your connection.</p>
+
+<p>You might be asked to reboot your system. Do so, and then open again the <strong>PowerShell</strong>, and run the following command:</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>wsl
+</code></pre></div></div>
+
+<p>You might see a message telling you that no distribution is installed, such as “Windows Subsystem for Linux has no installed distributtions”. If so, then run the following command, installing Ubuntu 24.04:</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>wsl <span class="nt">--install</span> Ubuntu-24.04
+</code></pre></div></div>
+
+<p>A Help window will then appear, you are free to roam around or just close it. In the command line, you are then asked to enter an account name, and a password. Please remember both! Password input in Linux doesn’t show any characters (not even *), which is always a bit stressful at first!</p>
+
+<p>Now is time to run an update on your system, to be sure that your software repository have all the latest versions:</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>apt update <span class="o">&amp;&amp;</span> <span class="nb">sudo </span>apt upgrade
+</code></pre></div></div>
+
+<p>Run the next command to download ARGoS, a configuration file, and a floor image:</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>wget <span class="s1">'https://github.com/OpenTechSchool-Brussels/AI-for-robots-and-swarms/raw/refs/heads/gh-pages/assets/argos3_b59.deb'</span>
+wget <span class="s1">'https://github.com/OpenTechSchool-Brussels/AI-for-robots-and-swarms/raw/refs/heads/gh-pages/assets/configTest.argos'</span>
+wget <span class="s1">'https://github.com/OpenTechSchool-Brussels/AI-for-robots-and-swarms/raw/refs/heads/gh-pages/assets/floor.png'</span>
+</code></pre></div></div>
+
+<p>And this one to install it (press Y and then enter when asked to do so):</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>apt <span class="nb">install</span> ./argos3_b39.deb
+</code></pre></div></div>
+<p>You can now test out ARGoS with the following command:</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>argos3 <span class="nt">-c</span> configTest.argos
+</code></pre></div></div>
+
+<p>Here, <strong>argos3</strong> is the name of the software, <strong>-c</strong> is what is called a flag, here meaning you will feed it a configuration file, and <strong>configTest.argos</strong> is the configuration file of the experiment we want to run here)</p>
+
+<p>You should see two windows appearing. One with an arena, a painted floor and robots (where you are meant to run the experiment); and another one with a text editor (where you are meant to code the behavior of the robots).
+If you see both things, congrats, you’re ready for the workshop! You can explore on the left the current version of the tutorial (update coming begining Nov 2025), in order to understand a bit better how to code the robot, and have a bit of experience. This will be very welcomed for the workshop, as you will be able to focus on the linguistic aspect of the behavior.</p>
+
+<h2>Troubleshooting</h2>
+<p>If when trying to run ARGoS you see a red error message, please run the following commands, one by one:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo ln</span> <span class="nt">-s</span> /usr/lib/x86_64-linux-gnu/libglut.so.3.12.0 /usr/lib/x86_64-linux-gnu/libglut.so.3
+<span class="nb">sudo ln</span> <span class="nt">-s</span> /usr/lib/x86_64-linux-gnu/libglut.so.3 /usr/lib/
+<span class="nb">sudo </span>ldconfig
+</code></pre></div></div>
+
+<p>And run again ARGoS with the same command above.</p>
+
+<p>If you see any other error messages, or if the previous one is still not resolved with those added commands, please do reach us, we will do our best to help you and update this tutorial incorporating your case issue. Thanks for helping us making this short tutorial better!</p>
+
+
+        </div>
+
+      </div>
+
+      <!-- Footer -->
+
+      <div class="footer">
+          <p> <a href="https://romamile.com">Roman Miletitch </a>  || Licensed under <a href="http://creativecommons.org/licenses/by-sa/3.0/">CC BY-SA 3.0</a>
+          </p>
+      </div>
+  </body>
+
+</html>
