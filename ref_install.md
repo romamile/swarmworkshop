@@ -41,7 +41,7 @@ sudo apt update && sudo apt upgrade
 
 Run the next command to download ARGoS, a configuration file, and a floor image:
 ```bash
-wget 'https://github.com/romamile/swarmworkshop/raw/refs/heads/gh-pages/assets/install/argos_install.tar.gz'
+wget 'https://romamile.com/swarmworkshop/assets/install/argos_install.tar.gz'
 tar -xzf argos_install.tar.gz
 ```
 
