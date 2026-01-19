@@ -1,12 +1,12 @@
 ---
 layout: default
-title:  "Let's get rolling"
+title:  "Navigation"
 num: 1
 ---
 
 Interstingly, once life appeared, it took ages for navigation to be (if not solved) at least tackled enough for life to move around. Once that was done, the rest followed pretty quickly relatively. To each hardware solution come a different software solutions; you don't control a car, a four leg robot or a rocket the same way. In this section, we will teach our robots how to move, hopefully quicker than life used to.
 
-<img src="./assets/marxbot.jpg" alt="picture of the marxbot" style="height:300px; float:right; margin:10px;">
+<img src="./assets/images/epuck_1.jpg" alt="picture of the marxbot" style="height:300px; float:right; margin:1em;">
 
 ## a)  Acting: One robot, two wheels
 
@@ -54,9 +54,9 @@ Don't take me wrong, I love driving straight in walls as much as the next guy, b
 
 ```lua
 log("--Proximity Sensors--")
-for i = 1,24 do
+for i = 1,8 do
     log("Angle: " .. robot.proximity[i].angle ..
-        "Value: " .. robot.proximity[i].value)
+        " - Value: " .. robot.proximity[i].value)
 end
 ```
 
@@ -133,7 +133,7 @@ if(robot.motor_ground[1].value < 0.40) then -- something on my left
   rightSpeed = -3
 end
 
-if(robot.motor_ground[4].value < 0.40) then -- something on my right
+if(robot.motor_ground[4].value < 0.40) then -- something on my rightsetup.tar.gz
   leftSpeed = -3
 end
 

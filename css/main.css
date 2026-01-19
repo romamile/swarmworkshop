@@ -271,3 +271,8 @@ pre a:only-of-type::before {
   margin-bottom: 20px;
 }
 
+.img-right {
+  float: right;
+  height: 300px;
+  margin: 0 0 1em 1.5em; /* space between image and text */
+}
