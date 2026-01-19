@@ -27,8 +27,10 @@ wsl
 
 You might see a message telling you that no distribution is installed, such as "Windows Subsystem for Linux has no installed distributtions". If so, then run the following command, installing Ubuntu 24.04:
 ```bash
-wsl --install Ubuntu-24.04
+wsl --install -d Ubuntu-24.04
 ```
+
+If you the system instead show you the help (as a list of commands), it might be that your system has not enabled WSL as a service. A possible solution then is to go in your power shell (possibly needed this time to be run as an administrator), and run `dism /online /get-features /format:table | findstr /i "Subsystem-Linux VirtualMachinePlatform Microsoft-Hyper-V"`. A table will appear, check if WSL is enabled. If not, run `dism.exe /online /enable-feature /featurename:Microsoft-Windows-Subsystem-Linux /all /norestart` and then reboot and resume the commands above. If it still does not work, you can also run `wsl --update` and then install Ubuntu again with the command above.
 
 A Help window will then appear, you are free to roam around or just close it. In the command line, you are then asked to enter an account name, and a password. Please remember both! Password input in Linux doesn't show any characters (not even *), which is always a bit stressful at first!
 

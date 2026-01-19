@@ -6,11 +6,11 @@ num: 1
 
 Interstingly, once life appeared, it took ages for navigation to be (if not solved) at least tackled enough for life to move around. Once that was done, the rest followed pretty quickly relatively. To each hardware solution come a different software solutions; you don't control a car, a four leg robot or a rocket the same way. In this section, we will teach our robots how to move, hopefully quicker than life used to.
 
-<img src="./assets/images/epuck_1.jpg" alt="picture of the marxbot" style="height:300px; float:right; margin:1em;">
+<img src="./assets/images/epuck_1.jpg" alt="picture of the epuck2" style="height:300px; float:right; margin:1em;">
 
-## a)  Acting: One robot, two wheels
+## a) One robot, two wheels, three ways to navigate
 
-Actually, they are *treels*, a portmanteau neologism of wheels and trails. But for all your concern, you can see the robot as two wheels along the horizontal axis. Controlling your robot movement will go through setting the speed of each of those wheels. For that we use the `robot.wheels.set_velocity(leftSpeed, rightSpeed)` function which accept two values (yep, left and right speed) as parameters, both measured in cm/s. Positive values will make wheels roll forward, negative will make them roll backward. For instance, let's make monomaniac robots:
+The epuck2 has two massive wheels (relative to its small size) equipped with a differential drive, and a metal ball on which he relies for stability. In order to move your robot, you set the speed of each of those wheels. For that we use the `robot.wheels.set_velocity(leftSpeed, rightSpeed)` function which accept two values (left and right speed) as parameters, both measured in cm/s. Positive values make the wheels roll forward, negative make them roll backward. For instance, to go straight:
 
 ```lua
 -- You will most of the time modify the step function
@@ -18,14 +18,15 @@ function step()
   robot.wheels.set_velocity(20,20)
 end
 ```
-
-Is this this simple to control your robot? Yes it is. Try out various speed for each wheels to get a feeling of how the robots is moving. For instance:
+This is the bare metal way of controlling your robot, we will see bellow better ways to do so. But before that, try out various speed for each wheels to get a feeling of how the robots is moving. For instance:
 
 * moving straight and frontward is *leftSpeed = rightSpeed*. Try `robot.wheels.set_velocity(20,20)`.
-* turning right is *leftSpeed > rightSpeed*. Try `robot.wheels.set_velocity(10,20)`.
+* turning continously right is *leftSpeed > rightSpeed*. Try `robot.wheels.set_velocity(10,20)`.
 * turning on your self is *leftSpeed = -rightSpeed*. Try `robot.wheels.set_velocity(20,-20)`.
 
-While your moving is aimless for now, you can already think of a few stuff to do with it. Try to draw shapes with your robots for instance (while circle are pretty straight forward, try to draw triangles or more complex shapes!).
+While your moving is aimless for now, you can already create simple behviors, such your robot path forming simple shapes. Try to draw a triangle for instance with its movement. To do so, you might want to create a global variable that is incremented by 1 at the beginning of the function **step**, measuring time elapsing. Once you do that, every N ticks, change the speed of the wheels.
+
+for instance (while circle are pretty straight forward, try to draw triangles or more complex shapes!).
 
 By the way, here we told that the code must go in the step function (usually the case). It'll be up to you usually to understand where to put the code (not too complex, I assure you) so you'll need to think if the code is meant to be executed once (in `inti()`) or constantly (in `step()`).
 
@@ -66,11 +67,11 @@ On of the most common usage for the proximity sensors is to avoid obstacles (obj
 
 ```lua
 
-sensingLeft = robot.proximity[3].value + robot.proximity[4].value +
-              robot.proximity[5].value + robot.proximity[6].value
+sensingLeft = robot.proximity[1].value + robot.proximity[2].value +
+              robot.proximity[3].value + robot.proximity[4].value
 
-sensingRight = robot.proximity[22].value+ robot.proximity[21].value +
-               robot.proximity[20].value + robot.proximity[19].value
+sensingRight = robot.proximity[5].value + robot.proximity[6].value +
+               robot.proximity[7].value + robot.proximity[8].value
 
 if( sensingLeft ~= 0 ) then
   driveAsCar(7,-3)
@@ -92,11 +93,9 @@ The robot have 4 grounds sensors on its lower part, each reading the brightness 
 
 ```lua
 log("--Ground Sensors--")
-for i = 1,4 do
-    log(robot.motor_ground[i].value)
-    log(robot.motor_ground[i].offset.x .. " " ..
-        robot.motor_ground[i].offset.y)
-end
+log(robot.ground.center)
+log(robot.ground.left)
+log(robot.ground.right)
 ```
 
 In this section's area are a few patterns on the ground, any idea on how to make your robot avoid them? Or get to them and stop? First you'll need a robot that will explore a bit by itself. We'll study this point better in next section, but you can already mash up something together with the `robot.random.uniform(min, max)` function. Try to implement one of both algorithm by yourself. Below is a solution for the stopping one:
@@ -104,7 +103,7 @@ In this section's area are a few patterns on the ground, any idea on how to make
 ```lua
 onSpot = true
 for i = 1,4 do
-    if( robot.motor_ground[i].value < 0.90 ) then -- not on a white spot
+    if( robot.ground.center < 0.90 ) then -- not on a white spot
       onSpot = false
     end
 end
@@ -129,11 +128,11 @@ Ok, that is great. You can move, you can see where you are moving. What about co
 leftSpeed = 5
 rightSpeed = 5
 
-if(robot.motor_ground[1].value < 0.40) then -- something on my left
+if(robot.ground.left < 0.40) then -- something on my left
   rightSpeed = -3
 end
 
-if(robot.motor_ground[4].value < 0.40) then -- something on my rightsetup.tar.gz
+if(robot.ground.right < 0.40) then -- something on my rightsetup.tar.gz
   leftSpeed = -3
 end
 
