@@ -47,7 +47,7 @@ tar -xzf argos_install.tar.gz
 
 And this one to install it (press Y and then enter when asked to do so):
 ```bash
-sudo apt install ./argos3_b39.deb
+sudo apt install ./argos3_b59.deb
 ``` 
 You can now test out ARGoS with the following command:
 ```bash
