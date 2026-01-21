@@ -17,7 +17,44 @@ The environment code will be provided, as well as the .argos file. While we don'
 
 
 ### Setting Up ARGoS & Lua
-ARGoS is developed for Linux first, but can also be installed on Mac and Windows. We will install ARGoS from source, which is a bit more tedious, but allow us to use the epuck robot, that we are currently using in research, and that will be 
+ARGoS is developed for Linux first, but can also be installed on Mac and Windows. We will install ARGoS from source, which is a bit more tedious, but allow us to use the epuck robot, that we are currently using in research, and that will be used in our future arena. You need to have administrative privilege on your machine, or at least to have high enough clearance to be able to install software on it. If you’re not sure, please check with your IT department or give the tutorial a go! If you have any issues (or even just questions) during the installation process, be sure to reach me at roman.miletitch@mpi.nl.
+
+If you are on Windows, please first go [here](./ref_win.html) in order to install WSL (Windows Subsystem for Linux) and then continue the installation as follow. If you are on Mac, please first go [here](./ref_win.html) and then continue the instalation as follow.
+
+In order to simplify the installation process (that you can see [here](https://github.com/ilpincy/argos3) for ARGoS, and [here](https://github.com/demiurge-project/argos3-epuck) for the epuck plugin), you can instead just run a script we prepared for you. It accesses the two github repositories (ARGoS and epuck), clone them localy, compile the code, and install it. To do so, create a new directory (here named *argos_workshop*, but you decide!) and then download and run the script:
+
+```bash
+mkdir argos_workshop
+cd argos_workshop
+wget -qO- "https://romamile.com/swarmworkshop/assets/install/install.sh" | bash
+```
+
+This will take some time, but should work fine!
+
+You can now test out ARGoS with the following command, from within your current working directory:
+```bash
+argos3 -c configTest.argos
+```
+
+Here, **argos3** is the name of the software, **-c** is what is called a flag, here meaning you will feed it a configuration file, and **configTest.argos** is the configuration file of the experiment we want to run here)
+
+You should see two windows appearing. One with an arena, a painted floor and robots (where you are meant to run the experiment); and another one with a text editor (where you are meant to code the behavior of the robots).
+If you see both things, congrats, you’re ready for the workshop! You are now free to explore the different log on the left, and learn about artificial behaviors.
+
+
+
+## Troubleshooting
+If when trying to run ARGoS you see a red error message, please run the following commands, one by one:
+
+```bash
+sudo ln -s /usr/lib/x86_64-linux-gnu/libglut.so.3.12.0 /usr/lib/x86_64-linux-gnu/libglut.so.3
+sudo ln -s /usr/lib/x86_64-linux-gnu/libglut.so.3 /usr/lib/
+sudo ldconfig
+```
+
+And run again ARGoS with the same command above.
+
+If you see any other error messages, or if the previous one is still not resolved with those added commands, please do reach us, we will do our best to help you and update this tutorial incorporating your case issue. Thanks for helping us making this short tutorial better!
 
 For Linux and Mac, please go [here](http://www.argos-sim.info/core.php). For windows, please go [here](./ref_install.html). If instead, for any particular reasons, you prefere to install it from source, or are curious to have a look at the source code, ARGoS is hosted on github [here](https://github.com/ilpincy/argos3/).
 
