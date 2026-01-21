@@ -31,19 +31,16 @@ wget -qO- "https://romamile.com/swarmworkshop/assets/install/install.sh" | bash
 
 This will take some time, but should work fine!
 
-You can now test out ARGoS with the following command, from within your current working directory:
+In order to check if ARGoS is well installed, just run `argos3 --version` and a green text should appear with the version name of currently installed ARGoS. If you are curious about all the possibilities of ARGos, run `argos3 -q all` in the command line, it will returns you all the module that are installed. To learn more about a specific module, you can then run `argos3 -q *name-of-the-module*`. You can now fully test out ARGoS with the following command, from within your current working directory:
 ```bash
 argos3 -c configTest.argos
 ```
 
 Here, **argos3** is the name of the software, **-c** is what is called a flag, here meaning you will feed it a configuration file, and **configTest.argos** is the configuration file of the experiment we want to run here)
 
-You should see two windows appearing. One with an arena, a painted floor and robots (where you are meant to run the experiment); and another one with a text editor (where you are meant to code the behavior of the robots).
-If you see both things, congrats, you’re ready for the workshop! You are now free to explore the different log on the left, and learn about artificial behaviors.
+You should see two windows appearing. One with an arena, a painted floor and robots (where you are meant to run the experiment), and a text editor window (where you code your robot controller in Lua). If you see both things, congrats, you’re ready for the workshop! You are now free to explore the different log on the left, and learn about artificial behaviors.
 
-
-
-## Troubleshooting
+#### Troubleshooting
 If when trying to run ARGoS you see a red error message, please run the following commands, one by one:
 
 ```bash
@@ -56,16 +53,12 @@ And run again ARGoS with the same command above.
 
 If you see any other error messages, or if the previous one is still not resolved with those added commands, please do reach us, we will do our best to help you and update this tutorial incorporating your case issue. Thanks for helping us making this short tutorial better!
 
-For Linux and Mac, please go [here](http://www.argos-sim.info/core.php). For windows, please go [here](./ref_install.html). If instead, for any particular reasons, you prefere to install it from source, or are curious to have a look at the source code, ARGoS is hosted on github [here](https://github.com/ilpincy/argos3/).
-
-In order to check if ARGoS is well installed, just run `argos3 --version` in your favorite command line, and a green text should appear with the version name of currently installed ARGoS. If you are curious about all the possibilities of ARGos, run `argos3 -q all` in the command line, it will returns you all the module that are installed. To learn more about a specific module, you can then run `argos3 -q *name-of-the-module*`.
-
-### Running ARGoS
-First, create a working directory for the workshop (we recommend as well one directory per page for this workshop), download [here](./assets/setup/setup.tar.gz) the assets you will use in this workshop, and unpack them in your working directory. In it, you will find the environment code and experimental setup we will use, as well as some pictures we will put on the floor of the arena. Now, to run ARGoS, go in your command line, in your working directory, and run: `argos3 -c expSetup.argos`. The `-c` is a flag, telling argos that the file right of it will be used as a configuration file.
 
 <a href="./assets/argosUI.png"><img class="img-right" src="./assets/argosUI.png" alt="picture of ARGoS UI"/></a>
 
-You should see two windows appearing. The small one is a text editor (where you will type your Lua code), the other is the ARGoS simulator itself (where you will see the robots moving and behaving erratically).
+### Running ARGoS
+<!-- First, create a working directory for the workshop (we recommend as well one directory per page for this workshop), download [here](./assets/setup/setup.tar.gz) the assets you will use in this workshop, and unpack them in your working directory. In it, you will find the environment code and experimental setup we will use, as well as some pictures we will put on the floor of the arena. Now, to run ARGoS, go in your command line, in your working directory, and run: `argos3 -c expSetup.argos`. The `-c` is a flag, telling argos that the file right of it will be used as a configuration file.
+-->
 
 So, your simulation is set, ready to be run. To do this, use the buttons at the top: the Play button plays the simulation, the Stop button stops it, the Forward button makes it quicker by only drawing every X frame (the number on its right). The button mixing pause and play makes the simulation step by step, perfect for debugging. In the center of the software, a view of your arena, and on its right, two text area for logging purposes. And the camera movement? Done in a not so classic (but workable) way using the mouse, you'll get the hang of it...
 
