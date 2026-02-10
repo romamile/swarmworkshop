@@ -71,7 +71,6 @@ Text logs are pretty great (they are), but not the most visual. If you want to s
 One of the most common uses for the proximity sensors is to avoid obstacles (objects, walls, other robots...) and navigate around them. Can you imagine what you need to do if you want to avoid obstacles, or at least react and turn in the right direction when encountering them? Try it yourself, and once satisfied with the result you can compare your code to the following proposition:
 
 ```lua
-
 local sensingLeft = robot.proximity[1].value + robot.proximity[2].value +
               robot.proximity[3].value + robot.proximity[4].value
 
@@ -115,7 +114,6 @@ Our current floor setup has a black spot on it. Try to imagine a behavior where 
 
 
 ```lua
-
 local onBlack = (robot.ground.left < 0.40) or
                 (robot.ground.center < 0.40) or
                 (robot.ground.right < 0.40)
