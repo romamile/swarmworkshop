@@ -86,7 +86,7 @@ else
 end
 ```
 
-Great, now your robot behaves as a Brownian particle. <!--It is an exploratory movement, but you can see it easily repeting the same patterns. A standard algorithm for exploration is called the random walk, where the robots randomly explore the environment. There are many version of such an algorithm, each with their advantage and drawbacks. In its essence, it relies on us feeding the robot random values, used then as a basis for movement. To do so, we can use the `robot.random.uniform(min, max)` function, that takes *min* and *max* numbers as parameters and generate a random number between those two values. Here is a simplistic and slightly broken way for the robot to randomly move:
+Great, now your robot behaves as a [Brownian particle](https://en.wikipedia.org/wiki/Brownian_motion). <!--It is an exploratory movement, but you can see it easily repeting the same patterns. A standard algorithm for exploration is called the random walk, where the robots randomly explore the environment. There are many versions of such an algorithm, each with their advantage and drawbacks. In its essence, it relies on us feeding the robot random values, used then as a basis for movement. To do so, we can use the `robot.random.uniform(min, max)` function, that takes *min* and *max* numbers as parameters and generate a random number between those two values. Here is a simplistic and slightly broken way for the robot to randomly move:
 
 ```lua
 driveAsCar(robot.random.uniform(10,20), robot.random.uniform(-10,10))
