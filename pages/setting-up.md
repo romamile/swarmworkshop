@@ -33,15 +33,15 @@ This will take some time, but should work fine!
 
 In order to check if ARGoS is well installed, just run `argos3 --version` and a green text should appear with the version name of currently installed ARGoS. If you are curious about all the possibilities of ARGos, run `argos3 -q all` in the command line, it will returns you all the module that are installed. To learn more about a specific module, you can then run `argos3 -q *name-of-the-module*`. You can now fully test out ARGoS with the following command, from within your current working directory:
 ```bash
-argos3 -c configTest.argos
+argos3 -c expSetup.argos
 ```
 
-Here, **argos3** is the name of the software, **-c** is what is called a flag, here meaning you will feed it a configuration file, and **configTest.argos** is the configuration file of the experiment we want to run here)
+Here, **argos3** is the name of the software, **-c** is what is called a flag, here meaning you will feed it a configuration file, and **expSetup.argos** is the configuration file of the experiment we want to run here)
 
 You should see two windows appearing. One with an arena, a painted floor and robots (where you are meant to run the experiment), and a text editor window (where you code your robot controller in Lua). If you see both things, congrats, you’re ready for the workshop! You are now free to explore the different log on the left, and learn about artificial behaviors.
 
 #### Troubleshooting
-If when trying to run ARGoS you see a red error message, please run the following commands, one by one:
+If when trying to run ARGoS you see an error message, please run the following commands, one by one:
 
 ```bash
 sudo ln -s /usr/lib/x86_64-linux-gnu/libglut.so.3.12.0 /usr/lib/x86_64-linux-gnu/libglut.so.3
@@ -73,15 +73,15 @@ In the Lua code editor, you will find that there are already some functions defi
 
 On top of Lua's syntax and libraries, ARGoS provide you with a specific container, adequately called `robot`. Anything robot related (sensor & actuator) will go through it. We will also use as a control for further visualisation. Another thing to keep in mind: the classic `print` Lua function doesn't work here, you need to use the ARGoS log function, which redirects output to the logging text areas of the simulator.
 
-Let's fill up  our experimentation with some code. Type inside the step function the following line, where `robot.id` refers to the robot own identification number.
+Let's fill up  our experimentation with some code. Type inside the step function the following line, where `robot.id` refers to the robot's identification number.
 
 ```Lua
 log("Hello, my name is " .. robot.id)
 ```
 
-In order to run this code, you need first to upload it to ARGoS by clicking on the little gear icon in the menu on top, or by  pressing **Ctrl-E**. Once the code loaded, you just have to press play on the main ARGoS UI to run it. On the right side, you'll see time steps and logging information. In ARGoS, the simulation is executed steps by steps. At each steps (or ticks), the function `step` is called for each robot, and is resolved.
+In order to run this code, you need first to upload it to ARGoS by clicking on the little gear icon in the menu on top, or by  pressing **Ctrl-E**. You are then asked to name your file (the first time you run it) and to save it. Once the code is loaded, pressing play on the main ARGoS UI will run your current experience. On the right side, you'll see time steps and logging information. In ARGoS, the simulation is executed steps by steps. At each steps (or ticks), the function `step` is called for each robot, and is resolved.
 
 On top of that, you have two neat functionalities: if you *Shift + Click* on a robot in the arena view in ARGoS, two debbug panels will appear in the Lua editor, with a list of the robot's functions, variables, and their values. Last, once a robot is selected this way, you can teleport it to a new location by pressing *Ctrl + Click* somewhere in the arena.
 
 ## Reference Material
-Lua is a quick straight forward scripting language. If you know python, you're in good hands. If you don't want python, you're still in good hands. There is scope for variables. If you want a variable to work as some global memory of your robot, you need to make it global by defining it at the top of your code (outside of any function). You'll see that Lua has only one data structure  type, *tables*, behaving as associative arrays, they store a set of key/value pairs. As mentioned earlier, to (re?)discover Lua and/or better understand this notion of table, you might want to check our [Lua reference page](./ref_lua.html), in combination with the other [ARGoS reference page](./ref_argos.html).
+Lua is a quick straight forward scripting language. If you know python, you're in good hands. If you don't know python, you're still in good hands. There is scope for variables. If you want a variable to work as some global memory of your robot, you need to make it global by defining it at the top of your code (outside of any function). You'll see that Lua has only one data structure  type, *tables*, behaving as associative arrays, they store a set of key/value pairs. As mentioned earlier, to (re?)discover Lua and/or better understand this notion of table, you might want to check our [Lua reference page](./ref_lua.html), in combination with the other [ARGoS reference page](./ref_argos.html).
