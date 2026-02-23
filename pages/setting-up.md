@@ -79,7 +79,7 @@ Let's fill up  our experimentation with some code. Type inside the step function
 log("Hello, my name is " .. robot.id)
 ```
 
-In order to run this code, you need first to upload it to ARGoS by clicking on the little gear icon in the menu on top, or by  pressing **Ctrl-E**. You are then asked to name your file (the first time you run it) and to save it. Once the code is loaded, pressing play on the main ARGoS UI will run your current experience. On the right side, you'll see time steps and logging information. In ARGoS, the simulation is executed steps by steps. At each steps (or ticks), the function `step` is called for each robot, and is resolved.
+In order to run this code, you need first to upload it to ARGoS by clicking on the little gear icon in the menu on top, or by  pressing **Ctrl-E**. You are then asked to name your file (the first time you run it) and to save it. It is **very important** that you save your file with a **.lua** file extension. If you don't, ARGoS will not be able to list your file when you try to open it up next time.  Once the code is loaded, pressing play on the main ARGoS UI will run your current experience. On the right side, you'll see time steps and logging information. In ARGoS, the simulation is executed steps by steps. At each steps (or ticks), the function `step` is called for each robot, and is resolved.
 
 On top of that, you have two neat functionalities: if you *Shift + Click* on a robot in the arena view in ARGoS, two debbug panels will appear in the Lua editor, with a list of the robot's functions, variables, and their values. Last, once a robot is selected this way, you can teleport it to a new location by pressing *Ctrl + Click* somewhere in the arena.
 
