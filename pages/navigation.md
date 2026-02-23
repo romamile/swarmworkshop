@@ -132,7 +132,7 @@ Now that we got to know a little bit more about our robot, let's create a comple
 ## Exploration - Follow the line
 Following the line is a classic robotic behavior, where your robot needs to recognize a path marked on the ground, and follow it until it reaches its goal. The quicker the robot is to reach its goal, the better, but also, the harder, as your robot might go off track and get lost by not sensing the path anymore. Managing to navigate a path can range from simple (a straight line) to quite complex (thin line, hard edges, changing width, obstacles along the way, or even dotted line!). Line following is often the first example used to introduce feedback control: the robot continuously measures an error (deviation from the line) and corrects its motion accordingly. The common underlying principle is simple: if you follow a black marked path on the ground, and your left sensor is returning a white value, you might want to turn toward the right, and vice versa. 
 
-In order to test our behavior, you can either download a floor example here (work in progress, file upcoming!) or design one yourself and update your floor picture. Below is a bare-bones example.
+In order to test our behavior, you can either download a floor example [here](https://romamile.com/swlang/assets/setup/line.png) or design one yourself and update your floor picture. For now, it is important to then rename your picture **floor.png** so it is recognise by the configuration file. If you prefer, you can check how the **expConfig.argos** file refers to the picture for the ground and change that.  Below is a bare-bones example.
 
 ```lua
 local leftSpeed = 5
