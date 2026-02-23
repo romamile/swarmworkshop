@@ -125,7 +125,7 @@ else
 end
 ```
 
-Let's add a bit more variety to our environment by adding more spots on the floor. To do so, use your favorite image editor and edit the **one_spot.png** file by adding a few black circles!
+Let's add a bit more variety to our environment by adding more spots on the floor. To do so, use your favorite image editor and edit the **floor.png** file by adding a few black circles!
 
 Now that we got to know a little bit more about our robot, let's create a complex behavior from scratch!
 

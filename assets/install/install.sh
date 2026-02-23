@@ -39,5 +39,5 @@ sudo make install
 
 # Downloading assets
 cd ../..
-wget https://romamile.com/swlang/assets/setup/one_spot.png
+wget https://romamile.com/swlang/assets/setup/floor.png
 wget https://romamile.com/swlang/assets/setup/expSetup.argos

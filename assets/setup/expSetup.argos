@@ -53,7 +53,7 @@
   <arena size="4, 4, 1" center="0,0,0.5">
 
 
-    <floor id="f" source="image" path="./one_spot.png" />
+    <floor id="f" source="image" path="./floor.png" />
 
     <box id="bn" size="0.1, 4, 0.2" movable="false">
       <body position="2,0,0"  orientation="0,0,0" />
