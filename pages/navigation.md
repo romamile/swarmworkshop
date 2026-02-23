@@ -77,16 +77,18 @@ local sensingLeft = robot.proximity[1].value + robot.proximity[2].value +
 local sensingRight = robot.proximity[5].value + robot.proximity[6].value +
                robot.proximity[7].value + robot.proximity[8].value
 
-if( sensingLeft ~= 0 ) then
-  driveAsCar(7,-3)
-elseif( sensingRight ~= 0 ) then
-  driveAsCar(7,3)
-else
+if( sensingLeft + sensingRight == 0 ) then -- no sensor are sensing something, so all at 0
   driveAsCar(10,0)
+elseif( sensingRight > sensingLeft ) then
+  driveAsCar(7,-3)
+else
+  driveAsCar(7,3)
+end
+
 end
 ```
 
-Great, now your robot behaves as a [Brownian particle](https://en.wikipedia.org/wiki/Brownian_motion). <!--It is an exploratory movement, but you can see it easily repeting the same patterns. A standard algorithm for exploration is called the random walk, where the robots randomly explore the environment. There are many versions of such an algorithm, each with their advantage and drawbacks. In its essence, it relies on us feeding the robot random values, used then as a basis for movement. To do so, we can use the `robot.random.uniform(min, max)` function, that takes *min* and *max* numbers as parameters and generate a random number between those two values. Here is a simplistic and slightly broken way for the robot to randomly move:
+Great, now your robot behaves as a [Brownian particle](https://en.wikipedia.org/wiki/Brownian_motion). Try to see what can be done to better that setup. Maybe you don't need to use four proximity sensors on each side, maybe you can have finer behavior depending on how many are triggered. <!--It is an exploratory movement, but you can see it easily repeting the same patterns. A standard algorithm for exploration is called the random walk, where the robots randomly explore the environment. There are many versions of such an algorithm, each with their advantage and drawbacks. In its essence, it relies on us feeding the robot random values, used then as a basis for movement. To do so, we can use the `robot.random.uniform(min, max)` function, that takes *min* and *max* numbers as parameters and generate a random number between those two values. Here is a simplistic and slightly broken way for the robot to randomly move:
 
 ```lua
 driveAsCar(robot.random.uniform(10,20), robot.random.uniform(-10,10))
