@@ -198,6 +198,20 @@ table.sort(t, function(a,b) return a.label < b.label end)
 -- Sort it by label in decreasing order
 table.sort(t, function(a,b) return a.label > b.label end)
 
+-- Shortcut for functions with self references
+function table.print(t)
+   for key,value in pairs(t) do
+      log(key .. ", " value)
+   end
+end
+
+t.print(t)
+
+-- is equivalent to
+
+t:print()
+
+
                     </pre>
                   </td>
                 </tr>
@@ -221,32 +235,7 @@ end
                   <td class="category">Math</td>
                   <td>
                     <pre>
--- All the math functions are part of the 'math' table
-
--- Setting a 2D vector from length and angle
-function vec2_new_polar(length, angle) {
-   local vec2 = {
-      x = length * math.cos(angle)
-      y = length * math.sin(angle)
-   }
-   return vec2
-}
-v = vec2_new_polar(2, math.pi/3)
-
--- Summing two 2D vectors (v1 = v1 + v2)
-function vec2_sum(v1, v2) {
-   v1.x = v1.x + v2.x
-   v1.y = v1.y + v2.y
-}
-v1 = { x=1, y=2 }
-v2 = { x=3, y=1 }
-vec2_sum(v1, v2)
-table.print(v1)   -- prints "x -> 4", "y -> 3"
-
--- Getting the angle of a 2D vector
-function vec2_angle(v) {
-   return math.atan2(v.y, v.x)
-}
+-- All the math functions are part of the 'math' and 'vector' table
 
 --[[ NOTE: to get a random number, DO NOT use math.random(). Rather,
      use robot.random, described below. ]]
