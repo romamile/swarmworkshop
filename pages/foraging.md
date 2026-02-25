@@ -74,23 +74,95 @@ and its usage in the `step` function:
   force_to_wheels(sumForce)
 ```
 
-This way is not the only way to apply a force to a robot, and absolutely not the best one. We sacrificed a lot for the sake of brievty. For instance, we cannot modulate the speed of our robot with the force, or change how strongley robots can turn on their own axis. You might want to play with the code, and complexify it to be able to have better control over your robot.
+This way is not the only way to apply a force to a robot, and absolutely not the best one. We sacrificed a lot for the sake of brievty. For instance, we cannot modulate the speed of our robot with the force, or change how strongley robots can turn on their own axis. You might want to play with the code, and complexify it to be able to have better control over your robot. Now, let's use that system to control our robots.
 
 
 
 ## Avoidance
+First, let's review our proximity avoidance code. We still want the same thing, to avoid running into walls (or any object you would have added to the arena since then!). Any idea on how to implement it on your own? As always here is a proposed solution:
 
-and proximity
+```lua
+function proximity_to_force()
+
+  local f = vector2(0, 0)
+
+  for i = 1, #robot.proximity do
+        -- We get the value and angle for each proximity sensor
+    local value = robot.proximity[i].value
+    local angle = robot.proximity[i].angle
+
+        -- we compute the direction vector of the sensor
+    local dir = vector2(1, 0)
+    dir:rotate(angle)
+
+        -- and we add it as a repulsive force
+    f = f - dir * value
+  end
+
+  return f
+end
+```
+
+Now you just have to call that function, and use that force to our previous force to wheel function.
 
 
 ## Controling the robot
-and using light, that you can move around?
+Let's add one more force, that you can somehow control too. In the arena, there is a big yellow ball, that is a light (you can control it by clicking on it with shift pressed, and then move it around with controle plus click. Just be careful to not select the ground, it crashes ARGoS!). Let's use the light sensor, and make the robots attracted to the lights like moth. The sensor is used in a same way than above, but instead of a repulsion, it is an attraction. The sensor is `robot.lights` with 8 sensors all around the robot, like the proximity sensor. Any idea how to update the code above into an attraction toward light? If not, here is a proposed solution:
 
+```lua
+function light_to_force()
+
+  local f = vector2(0, 0)
+
+  for i = 1, #robot.light do
+    local value = robot.light[i].value
+    local angle = robot.light[i].angle
+
+    local dir = vector2(1, 0)
+    dir:rotate(angle)
+
+    -- attraction: pull toward the light direction
+    f = f + dir * value
+  end
+
+  return f
+end
+```
+
+So now, you have multiple forces. You can add them in many ways, but the most standard is a weighted sum, to regulate what behavior is the most important one. For instance :
+
+
+```lua
+local proxF = proximity_to_force()
+local lightF = light_to_force()
+
+local sumF = 10 * proxF + 3 + lightF
+sumF:normalise()
+
+force_to_wheels(sumF)
+
+```
 
 
 ## Random walk
 just using a random number on top of just peroximity, easier to use together
 more generic with others
+
+And last, let's create the basis of all exploratory behaviors: a random walk. Because some times, you can't rely on bumping in walls for exploring an area.
+
+
+```lua
+function random_walk_force()
+
+  -- random angle between -pi and pi
+  local a = -math.pi + 2 * math.pi * math.random()
+
+  local f = vector2(1, 0)
+  f:rotate(a)
+
+  return f
+end
+```
 
 
 <!--

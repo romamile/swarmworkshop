@@ -8,15 +8,29 @@ num: 3
 
 
 ## Reaching out
-range and bearing
-avoiding robot with grace
-
-and explaining the different stuff in range and bearing. the range, the bering, and the data
+Range and bearing is both a recognition system between robots (giving you the range - distance, and the bearing - angle, between you and any other robots), as well as a communication system. Here, we will use it as a recognition system, and use it similarly as the proximity sensor, but at a bigger distance, hence helping better movement between robots.
 
 ```lua
+function rab_to_force()
+  local f = vector2(0, 0)
 
+  for i = 1, #robot.range_and_bearing do
+    local p = robot.range_and_bearing[i]
 
+    local dir = vector2(1, 0)
+    dir:rotate(p.bearing)
+
+    local w = 1 / (p.range + 0.01)  -- avoid divide by zero
+    f = f - dir * w
+  end
+
+  return f
+end
 ```
+
+you might want to change the repulsive force into an attraction if you want to agregate robots. Try as well to have a force that tries to force a specific distance between robots. This creates interesting crystal shapes as a swarm!
+
+
 
 
 ## minimal language game
