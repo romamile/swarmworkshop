@@ -13,17 +13,21 @@ title:  "Reference Vector"
       <td class="category">Create</td>
       <td>
         <pre>
--- vector2(...) is a GLOBAL constructor registered by ARGoS
-
 v = vector2()          -- (0,0) : default constructor
 v = vector2(1.5, -3)   -- (x,y) : value constructor
-u = vector2(v)         -- copy constructor (useful before in-place ops)
+u = vector2(v)         
+
+-- with rotate, seen later bellow
+l = 1
+angle = 0.5
+v = vector2(l, 0):rotate(angle)
+
         </pre>
       </td>
     </tr>
 
     <tr class="odd">
-      <td class="category">Access (x,y)</td>
+      <td class="category">Access</td>
       <td>
         <pre>
 v = vector2(3, 4)
@@ -32,7 +36,11 @@ v = vector2(3, 4)
 log("v.x = " .. v.x)
 log("v.y = " .. v.y)
 
--- write (only 'x' and 'y' are valid keys)
+log("v = " .. tostring(v))
+
+log("v = " .. v)  -- equivalent
+
+-- write
 v.x = 10
 v.y = -2
         </pre>
@@ -40,25 +48,6 @@ v.y = -2
     </tr>
 
     <tr class="even">
-      <td class="category">Print &amp; compare</td>
-      <td>
-        <pre>
-v = vector2(1, 2)
-w = vector2(1, 2)
-z = vector2(2, 1)
-
--- tostring() is implemented, so this works:
-log("v = " .. tostring(v))
-log("v = " .. v)  -- equivalent
-
--- equality
-log(v == w)  -- true
-log(v == z)  -- false
-        </pre>
-      </td>
-    </tr>
-
-    <tr class="odd">
       <td class="category">Operators</td>
       <td>
         <pre>
@@ -67,18 +56,23 @@ b = vector2(3, 4)
 
 s = a + b     -- addition
 d = a - b     -- subtraction
-n = -a        -- unary minus (negation)
 
--- scalar multiplication (both orders are supported)
+-- scalar multiplication
 k1 = a * 10
-k2 = 10 * a
 
--- NOTE: vector * vector is NOT supported (will error)
+-- equality
+v = vector2(1, 2)
+w = vector2(1, 2)
+z = vector2(2, 1)
+
+log(v == w)  -- true
+log(v == z)  -- false
+
         </pre>
       </td>
     </tr>
 
-    <tr class="even">
+    <tr class="odd">
       <td class="category">Length</td>
       <td>
         <pre>
@@ -88,43 +82,36 @@ log(v:length())   -- 5
       </td>
     </tr>
 
-    <tr class="odd">
+    <tr class="even">
       <td class="category">Normalize (in-place)</td>
       <td>
         <pre>
--- normalize() MODIFIES the vector object and returns it
 
 v = vector2(3, 4)
 v:normalize()
 log(v:length())   -- ~1
 
--- if you want a normalized COPY:
-v = vector2(3, 4)
-u = vector2(v):normalize()  -- copy then normalize
         </pre>
       </td>
     </tr>
 
-    <tr class="even">
+    <tr class="odd">
       <td class="category">Dot product</td>
       <td>
         <pre>
 a = vector2(1, 0)
 b = vector2(0, 1)
 
-d = a:dot(b)   -- returns a NUMBER
+d = a:dot(b)
 log(d)         -- 0
         </pre>
       </td>
     </tr>
 
-    <tr class="odd">
-      <td class="category">Cross product (in-place)</td>
+    <tr class="even">
+      <td class="category">Cross product</td>
       <td>
         <pre>
--- cross() MODIFIES the first vector and returns it
--- (exact behavior depends on ARGoS CVector2::CrossProduct)
-
 a = vector2(1, 0)
 b = vector2(0, 1)
 
@@ -137,51 +124,14 @@ c = vector2(a):cross(b)   -- cross on a copy
       </td>
     </tr>
 
-    <tr class="even">
+    <tr class="odd">
       <td class="category">Rotate (in-place, radians)</td>
       <td>
         <pre>
--- rotate(angle) expects angle in RADIANS
--- rotate() MODIFIES the vector and returns it
 
 v = vector2(1, 0)
 v:rotate(math.pi / 2)   -- ~ (0,1)
 
--- rotated COPY:
-v = vector2(1, 0)
-w = vector2(v):rotate(math.pi / 2)
-        </pre>
-      </td>
-    </tr>
-
-    <tr class="odd">
-      <td class="category">Common patterns (ARGoS control)</td>
-      <td>
-        <pre>
--- Bearing (radians) -> unit direction vector
-function bearing_to_vec(bearing)
-  return vector2(1, 0):rotate(bearing)
-end
-
--- Safe normalize (avoid normalizing zero vector)
-function normalize_safe(v)
-  if v:length() &gt; 0 then
-    v:normalize()
-  end
-  return v
-end
-
--- Sum directions of received RAB packets (example)
-function step()
-  local sum = vector2()
-  for _, p in ipairs(robot.range_and_bearing) do
-    local dir = bearing_to_vec(p.bearing)
-    sum = sum + dir
-  end
-
-  normalize_safe(sum)
-  -- sum.x / sum.y is now a heading (or (0,0) if no neighbors)
-end
         </pre>
       </td>
     </tr>
