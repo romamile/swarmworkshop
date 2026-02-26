@@ -8,15 +8,29 @@ num: 3
 
 
 ## Reaching out
-range and bearing
-avoiding robot with grace
-
-and explaining the different stuff in range and bearing. the range, the bering, and the data
+Range and bearing is both a recognition system between robots (giving you the range - distance, and the bearing - angle, between you and any other robots), as well as a communication system. Here, we will use it as a recognition system, and use it similarly as the proximity sensor, but at a bigger distance, hence helping better movement between robots.
 
 ```lua
+function rab_to_force()
+  local f = vector2(0, 0)
 
+  for i = 1, #robot.range_and_bearing do
+    local p = robot.range_and_bearing[i]
 
+    local dir = vector2(1, 0)
+    dir:rotate(p.bearing)
+
+    local w = 1 / (p.range + 0.01)  -- avoid divide by zero
+    f = f - dir * w
+  end
+
+  return f
+end
 ```
+
+you might want to change the repulsive force into an attraction if you want to agregate robots. Try as well to have a force that tries to force a specific distance between robots. This creates interesting crystal shapes as a swarm!
+
+
 
 
 ## minimal language game
@@ -45,14 +59,13 @@ local function send_beacon()
 end
 
 
-local start_game(hearer_id, word)
+local function start_game(hearer_id, word)
     -- the 1 in third place means we want to start a game
   robot.range_and_bearing.set_data( {tonumber(robot.id:sub(3)), hearer_id, 1, word} )
 end
 
 
 local function send_answer(speaker_id, success)
-  send_bytes(my_id(), speaker_id, 2, success and 1 or 0)
     -- the 2 in third place means we are answering in a game
   robot.range_and_bearing.set_data( {tonumber(robot.id:sub(3)), speaker_id, 2, success} )
 end
@@ -61,12 +74,12 @@ end
 Last, let's implement the behavior of the game itself. For the speaker, it is about a probability of speaking, and then finding a robot in range:
 
 ```lua
-funtion speaker_step()
+function speaker_step()
     
   local pSpeak = 0.1
 
     -- Should we speak?
-  if (math.random() < pSpeak)
+  if (math.random() < pSpeak) then
     return false
   end
 
@@ -85,13 +98,13 @@ funtion speaker_step()
   local hearer_id = candidates[math.random(#candidates)]
 
     -- no known words, then invent one!
-  if #voc == 0
+  if #voc == 0 then
     voc[1] = math.random(1,255)
   end
 
   local word = voc[1]
 
-  send_start_game(hearer_id, word)
+  start_game(hearer_id, word)
   return true
 end
 
@@ -114,15 +127,15 @@ local function hearer_step()
       local word = payload
 
       -- check if word is in vocabulary
-      local success = false
+      local success = 0
       for j = 1, #voc do
         if voc[j] == word then
-          success = true
+          success = 1
           break
         end
       end
 
-      if success then -- simplify vocabulary to only that word
+      if success == 1 then -- simplify vocabulary to only that word
         voc = {word}
       else -- add word to vocabulary
         voc[#voc + 1] = word
