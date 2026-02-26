@@ -60,19 +60,19 @@ Second, here are the three message sending protocols we will use that encompass 
 -- Answer:   [my_id, other_id, 2, 0|1]      0 fail, 1 success
 
 
-local function send_beacon()
+function send_beacon()
     -- the 0 in third place means we are broadcasting our presence
   robot.range_and_bearing.set_data( {tonumber(robot.id:sub(3)), 0, 0, 0} )
 end
 
 
-local function start_game(hearer_id, word)
+function start_game(hearer_id, word)
     -- the 1 in third place means we want to start a game
   robot.range_and_bearing.set_data( {tonumber(robot.id:sub(3)), hearer_id, 1, word} )
 end
 
 
-local function send_answer(speaker_id, success)
+function send_answer(speaker_id, success)
     -- the 2 in third place means we are answering in a game
   robot.range_and_bearing.set_data( {tonumber(robot.id:sub(3)), speaker_id, 2, success} )
 end
@@ -116,7 +116,6 @@ function speaker_step()
 end
 
 ```
-
 
 as for the hearer:
 
