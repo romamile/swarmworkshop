@@ -86,7 +86,7 @@ function speaker_step()
     -- Build list of neighboors and their ids
   local neighboors = {}
   for i = 1, #robot.range_and_bearing do
-    neighboors[#candidates + 1] = robot.range_and_bearing[i].data[1]
+    neighboors[#neighboors + 1] = robot.range_and_bearing[i].data[1]
   end
 
     -- No neighboors :(
@@ -95,7 +95,7 @@ function speaker_step()
   end
 
     -- pick a random neighboors
-  local hearer_id = candidates[math.random(#candidates)]
+  local hearer_id = neighboors[math.random(#neighboors)]
 
     -- no known words, then invent one!
   if #voc == 0 then
