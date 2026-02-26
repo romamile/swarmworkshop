@@ -168,7 +168,7 @@ And as a whole in the step function :
   
     -- If not, maybe you might act as a speaker then
   if not busy then
-    speaker_step()
+    busy = speaker_step()
   end
 
     -- If not, then broadcast about yourself
@@ -181,6 +181,7 @@ And as a whole in the step function :
 Now, all the above will allow you to run an experimentation with your robots playing a MNG. Ideally, you would have graphical representation on top of the robots for the words being used (coming soon!), but for now, you can probe the brain of any robots either by clickig on them with Shift pressed, and looking into their memory, or more globally, output in ARGoS at each tick the vocabulary of all robots:
 
 ```lua
+log("---")
 for i = 1, #voc do
     log(voc[i] .. " ")
 end
