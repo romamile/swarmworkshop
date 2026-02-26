@@ -43,6 +43,7 @@ MAX_SPEED = 10
 
 function force_to_wheels(f)
     -- if no force is applied, then don't move!
+    --- IMPORTANT In lua, f:length() is equivalent to f.length(f)
   if f:length() == 0
 	 then robot.wheels.set_velocity(0, 0) 
     return false
@@ -91,6 +92,7 @@ function proximity_to_force()
 
   local f = vector2(0, 0)
 
+    -- IMPORTANT >> the # bellow is a shortcut to access the length of a table
   for i = 1, #robot.proximity do
         -- We get the value and angle for each proximity sensor
     local value = robot.proximity[i].value

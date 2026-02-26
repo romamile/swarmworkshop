@@ -50,16 +50,16 @@ ul, ol {
 .header {
   padding: 10px 30px 5px;
   font-color: #FFFFFF;
-  background:  #085987;
+  background:  #ED6B06;
   box-shadow: 0 1px 10px rgba(0, 0, 0, 0.1);
 }
-.header .ots {
+.header .mpi {
   display: inline-block;
   width: 184px;
   height: 32px;
   overflow: hidden;
   text-indent: 101%;
-  background: url('../assets/images/lg_opentechschool.png') 0 50% no-repeat;
+  background: url('../assets/images/logo_mpipl_white.png') 0 50% no-repeat;
 }
 .header a {
   color: #C1D5E1;
