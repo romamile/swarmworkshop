@@ -23,6 +23,8 @@ In our case, we will mostly touch the **arena** section. One exception to that i
 
 As for the **arena**, you can change the name of the floor picture, the position and size of the walls, add other boxes to complexify the environment and in partiular .... modify the number of robots! It is time for our swarm to be more than just one robot. For that, search for the line : `<entity quantity="1" max_trials="100">` in the **arena** section, and change the value of **quantity** to any number of robot you want. Run your past code with various amount of robot, and see how the overall behavior is affected. In the rest of the course, we expect a number of around 20 robots. Don't hesitate as well to modify the arena itself and complexify it.
 
+Over this course, you are not only going to develop your robotic behavior and experimental setup, but also try various settings and behaviors. This is why we recommend having multiple configuration files you can easily switch between, as well as multiple Lua code files, depending on the behavior you want to explore. 
+
 
 ## The third way to navigate: with forces
 As mentioned above, while the previous page's ways to move around were functional, they were not the easiest to get a feel of or to work with. In this section, we will use forces to control our robot. This will make for a more natural looking behavior, and an easier one to control, to build upon and to modulate.
