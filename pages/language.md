@@ -5,10 +5,13 @@ num: 3
 ---
 
 
+While our robots are not yet foraging, they are already engaged in an exploratory task (or even in a seeking task if you kept the light). This creates already an interesting dynamic as the network is both spatially structured and dynamic. So now, let's introduce communication to our robots!
 
 
 ## Reaching out
-Range and bearing is both a recognition system between robots (giving you the range - distance, and the bearing - angle, between you and any other robots), as well as a communication system. Here, we will use it as a recognition system, and use it similarly as the proximity sensor, but at a bigger distance, hence helping better movement between robots.
+Range and bearing is both a recognition system between robots, as well as a communication system. It gives you the range - distance, and the bearing - angle, between you and any other robots, and allow you to share a payload - data with them.
+
+Here, we will use it as a detection system and use it similarly as the proximity sensor (e.g., the closer another robot is, the bigger the force that points away from the other robot). While this is yet another repulsion force between robots, it can as well be adjusted to be an attraction force between robots, or even an inbetween (repulsion if too close, attraction if too far). While avoidance in this context only works with robots (and not walls or boxes), the range of detection is bigger than the one of the proximity sensor. While proximity helps with avoiding immediate collision, range and bearing controls the swarm structure, helping to achieve better and smoother movement between robots.
 
 ```lua
 function rab_to_force()
@@ -28,22 +31,26 @@ function rab_to_force()
 end
 ```
 
-you might want to change the repulsive force into an attraction if you want to agregate robots. Try as well to have a force that tries to force a specific distance between robots. This creates interesting crystal shapes as a swarm!
+As mentioned, you might want to change the repulsive force into an attraction, if you want to aggregate robots, for example. Try as well to have a force that tries to force a specific distance between robots. This creates interesting crystal shapes as a swarm!
 
 
 
+## Minimal Naming  Game
 
-## minimal language game
+The Minimal Naming Game (MNG) is a simplified version of the Naming Game, which is one of the many language game that are used for the study of language evolution and emmergence.
 
+A simplified exlpanation would be (for a more indepth explanation, see REF) that all robot have a vocabulary, and will talk to each other. To do so, first a speaker needs to be selected, that will send a word to a hearer. If the hearer know of the word, then the game is a success, and it keeps in its memory only that word. If the hearer doesn't know the word, then the game is a failure, and the robot add this new word to its current vocabulary. If the speaker doesn't have any word to send, then it will randomly create one.
 
-
-First, we need to have a vocabulary. For that matter, on top of the file we define a global table: our vocabulary, which will hold our words.
+So, first of all, we needs words. They are going to be numbers, between 1 and 255. And we need a vocabulary, defines a global table at the begining of our Lua code file:
 
 ```lua
 voc = {}
 ```
 
-Second, here are the three message sending protocol we will use, when we want to broadcast our presence, start a game, or answer.
+Second, here are the three message sending protocols we will use that encompass the MNG:
+* `send_beacon` as our default behavior, to broadcast our presence and that we are eager to play a MNG;
+* `start_game` to behave as a speaker, and start a game with a specific robot;
+* `send_answer` to behave as a hearer, and answer a game played with us.
 
 
 ```lua
@@ -172,4 +179,14 @@ And as a whole in the step function :
 
 ```
 
+Now, all the above will allow you to run an experimentation with your robots playing a MNG. Ideally, you would have graphical representation on top of the robots for the words being used (coming soon!), but for now, you can probe the brain of any robots either by clickig on them with Shift pressed, and looking into their memory, or more globally, output in ARGoS at each tick the vocabulary of all robots:
+
+```lua
+for i = 1, #voc do
+    log(voc[i] .. " ")
+end
+```
+
+
+With all code, the robots can now play a MNG, and it is up to you to change their behavior, would it be giving them a task to do, and to see how it impact the language dymanics, or make changes to the MNG and see what happens then!
 

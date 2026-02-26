@@ -12,6 +12,8 @@ One file you have been using but we haven't talked much about is the **expSetup.
 
 We won't go through an exhaustive description of it, but show you how it looks like, and pinpoint some usefull modifications. First, always keep a copy of it to revert back any modification (if you didn't, you can get the original [here](https://romamile.com/swlang/assets/setup/expSetup.argos)).
 
+On linux and mac, you can directly open the file from command line with your favorite text editor. As for windows, we recommend you to run the following line in the command line: `explorer.exe .`. This will open your working folder in the standard file explorer window, which then allow you to use easily any text editor you want.
+
 The file follows an XML format, and is separated in sections:
 * **framework** defines global conditions of the experiment such as the random seed we use (good for repetability) or the length in time of the experiment;
 * **controllers** defines the kind of controller we will use, and which sensor and actuators they have access to;
@@ -19,7 +21,7 @@ The file follows an XML format, and is separated in sections:
 * **physics engines** and **media** defines what engine to use, as well as what communication channels are allowed (light, range and bearing, etc etc)
 * **visualization** defines the positions of camera, as well as other visual parameters
 
-In our case, we will mostly touch the **arena** section. One exception to that is to search for **show_rays** in the controller section, and to switch its value from *false* to *true*. This can be useful for debugging the perception and range of the robot's sensors.
+In our case, we will mostly touch the **arena** section. One exception is the **show_rays** attribute associated with sensors, in the controller section. This will show you which sensor allows their range to be visualised inside ARGoS. You can switch any of those between *false* and *true* depending on whether you want to see the rays or not in ARGoS. This can be useful for debugging the perception and range of the robot's sensors.
 
 As for the **arena**, you can change the name of the floor picture, the position and size of the walls, add other boxes to complexify the environment and in partiular .... modify the number of robots! It is time for our swarm to be more than just one robot. For that, search for the line : `<entity quantity="1" max_trials="100">` in the **arena** section, and change the value of **quantity** to any number of robot you want. Run your past code with various amount of robot, and see how the overall behavior is affected. In the rest of the course, we expect a number of around 20 robots. Don't hesitate as well to modify the arena itself and complexify it.
 
@@ -112,11 +114,18 @@ function proximity_to_force()
 end
 ```
 
-Now you just have to call that function, and use that force to our previous force to wheel function.
+Congratulation, you have now your first sensor to force function! The aim is to formalise most of them this way around, as it will make it easier for everyone (me included). Your past code on how to use the force to control the wheel was force to actuator, so now we have a full loop!
 
 
-## Controlling the robot
-Let's add one more force, that you can somehow control too. In the arena, there is a big yellow ball, that is a light (you can control it by clicking on it with shift pressed, and then move it around with controle plus click. Just be careful to not select the ground, it crashes ARGoS!). Let's use the light sensor, and make the robots attracted to the lights like moth. The sensor is used in a same way than above, but instead of a repulsion, it is an attraction. The sensor is `robot.light` with 8 sensors all around the robot, like the proximity sensor. Any idea how to update the code above into an attraction toward light? If not, here is a proposed solution:
+```lua
+  local fProx = proximity_to_force()
+  local sumForce = fProx               -- Not a lot to add, but good for later!
+  force_to_wheels(sumForce)
+```
+
+
+## Guiding the robot
+Let's add one more force, that you can somehow control too. In the arena, there is a big yellow ball, that is a light (you can modify its position from the configuration file). Let's use the light sensor, and make the robots attracted to the lights like moth. The sensor is used in a same way than above, but instead of a repulsion, it is an attraction. The sensor is `robot.light` with 8 sensors all around the robot, like the proximity sensor. Any idea how to update the code above into an attraction toward light? If not, here is a proposed solution:
 
 ```lua
 function light_to_force()
@@ -138,7 +147,7 @@ function light_to_force()
 end
 ```
 
-So now, you have multiple forces. You can add them in many ways, but the most standard is a weighted sum, to regulate what behavior is the most important one. For instance :
+So now, you have multiple forces of various lengths (and hence influences). Adding forces together is where you decide what your robot should prioritise. Should you add both force just as is? Normalise them first, and then make a weighted sum? Many variations, fitting different context. You are free (and encouraged) to explore your own ways, below is one possibility among many:
 
 
 ```lua
@@ -153,10 +162,10 @@ force_to_wheels(sumF)
 ```
 
 
-## Random walk
-just using a random number on top of just peroximity, easier to use together
-more generic with others
+Finding the correct weights for the behavior you want to acheive can be finicky, especially when each functions does not return a normalized force (you might want to explore that direction). We do have a coherent system, but that doesn't mean that everything about it is obvious. Which is good in the end, because this is where we have room to modify the behavior, giving more importance to one force (and hence one sub-behavior) than to another.
 
+
+## Random walk
 And last, let's create the basis of all exploratory behaviors: a random walk. Because some times, you can't rely on bumping in walls for exploring an area.
 
 
@@ -173,6 +182,7 @@ function random_walk_force()
 end
 ```
 
+## Exploration -- Later!
 
 <!--
 ## odometry
