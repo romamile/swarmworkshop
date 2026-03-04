@@ -84,8 +84,6 @@ elseif( sensingRight > sensingLeft ) then
 else
   driveAsCar(7,3)
 end
-
-end
 ```
 
 Great, now your robot behaves as a [Brownian particle](https://en.wikipedia.org/wiki/Brownian_motion). Try to see what can be done to better that setup. Maybe you don't need to use four proximity sensors on each side, maybe you can have finer behavior depending on how many are triggered. <!--It is an exploratory movement, but you can see it easily repeting the same patterns. A standard algorithm for exploration is called the random walk, where the robots randomly explore the environment. There are many versions of such an algorithm, each with their advantage and drawbacks. In its essence, it relies on us feeding the robot random values, used then as a basis for movement. To do so, we can use the `robot.random.uniform(min, max)` function, that takes *min* and *max* numbers as parameters and generate a random number between those two values. Here is a simplistic and slightly broken way for the robot to randomly move:
