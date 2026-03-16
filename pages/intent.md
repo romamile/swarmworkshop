@@ -96,17 +96,17 @@ function proximity_to_force()
 
   local f = vector2(0, 0)
 
-    -- IMPORTANT >> the # bellow is a shortcut to access the length of a table
+  -- IMPORTANT >> the # bellow is a shortcut to access the length of a table
   for i = 1, #robot.proximity do
         -- We get the value and angle for each proximity sensor
     local value = robot.proximity[i].value
     local angle = robot.proximity[i].angle
 
-        -- we compute the direction vector of the sensor
+    -- we compute the direction vector of the sensor
     local dir = vector2(1, 0)
     dir:rotate(angle)
 
-        -- and we add it as a repulsive force
+    -- and we add it as a repulsive force
     f = f - dir * value
   end
 
