@@ -1,7 +1,7 @@
 #!/bin/bash
 
 echo " == Installing packages"
-sudo apt-get install -y build-essential cmake pkg-config libfreeimage-dev libfreeimageplus-dev \
+sudo apt-get install -y build-essential wget cmake pkg-config libfreeimage-dev libfreeimageplus-dev \
   freeglut3-dev libxi-dev libxmu-dev liblua5.3-dev \
   lua5.3 doxygen graphviz libgraphviz-dev asciidoc \
   qtbase5-dev qtchooser qt5-qmake qtbase5-dev-tools qttools5-dev qttools5-dev-tools libqt5opengl5-dev

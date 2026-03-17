@@ -44,34 +44,25 @@ MAX_SPEED = 10
 
 
 function force_to_wheels(f)
-    -- if no force is applied, then don't move!
-    --- IMPORTANT In lua, f:length() is equivalent to f.length(f)
-  if f:length() == 0
-	 then robot.wheels.set_velocity(0, 0) 
-    return false
-  end
 
     -- angle of the force through the magic of the arctan function
   local a = math.atan(f.y, f.x)
 
-    -- we find the amount of turning we should do
+    -- strenght of the turn (ratio between angle and PI)
   local s = math.abs(a) / math.pi
-  local slow = (1 - s) * MAX_SPEED
 
-    -- Make it L or R speed
-  if a >= 0 then
-    -- turning left → slow left wheel
-    left = slow
-    right = MAX_SPEED
+    -- overall speed (from lenght of the force vector)
+  local m = math.min(f:length(), 1)
+
+  if a > 0 then -- turning direction depending on the sign of a
+    left = m * MAX_SPEED * (1 - s)
+    right = m * MAX_SPEED
   else
-    -- turning right → slow right wheel
-    left = MAX_SPEED
-    right = slow
+    left = m * MAX_SPEED
+    right = m * MAX_SPEED * (1 - s)
   end
 
-    -- and we apply it to our wheels
   robot.wheels.set_velocity(left, right)
-  return true
 end
 ``` 
 
@@ -82,7 +73,7 @@ and its usage in the `step` function:
   force_to_wheels(sumForce)
 ```
 
-This is an example among many on how to compute wheel speed from a force. In this code, we sacrificed a lot for the sake of brevity. For instance, we cannot modulate the speed of our robot with the force, or change how strongly robots can turn on their own axis. You might want to play with the code, and complexify it to be able to have better control over your robot. Now, let's use that system to control our robots.
+This is an example among many on how to compute wheel speed from a force. In this code, we get the orientation of the force, how strongly we should turn, and keep the lenght of the force as a measure of the overal speed of our robot. You might want to play with the code, and complexify it to be able to have better control over your robot. Now, let's use that system to control our robots.
 
 
 
@@ -117,9 +108,13 @@ Congratulations, you have now your first *sensor to force* function! The aim is 
 
 ```lua
   local fProx = proximity_to_force()
-  local sumForce = fProx               -- Not a lot to add, but good for later!
+
+  local sumF = fProx               -- Not a lot to add, but good for later!
+
   force_to_wheels(sumForce)
 ```
+
+Obstacle avoidance is a common behavior that is used in many navigation algorithme. But ... what if robots where not repulsed by others objects, but attracted to them? How could you change your code to reflect that? And how would you name this new behavior?
 
 
 ## Guiding the robot
@@ -162,19 +157,26 @@ force_to_wheels(sumF)
 
 Finding the correct weights for the behavior you want to achieve can be finicky, especially when each functions does not return a normalized force (you might want to explore that direction). We do have a coherent system, but that doesn't mean that everything about it is obvious. Which is good in the end, because this is where we have room to modify the behavior, giving more importance to one force (and hence one sub-behavior) than to another.
 
+Similarly to our previous obstacle avoidance force, how would you change your code so that robots are not attracted to the light, but try to hide from it? Try to play around with those forces, and their intensity. You have everything in your hand already to create [Braitenberg vehicle](https://en.wikipedia.org/wiki/Braitenberg_vehicle.)
 
 ## Random walk
 And last, let's create the basis of all exploratory behaviors: a random walk. Because sometimes, you can't rely on bumping in walls for exploring an area.
 
 
 ```lua
+-- global variable to be put at the root
+angle = 0
+
 function random_walk_force()
 
-  -- random angle between -pi and pi
-  local a = -math.pi + 2 * math.pi * math.random()
+    -- measure of the drift
+  local k = math.pi
+
+    -- adding at each step a variation on our current angle
+  angle = angle + k * (math.random() - 0.5) * 0.5
 
   local f = vector2(1, 0)
-  f:rotate(a)
+  f:rotate(angle)
 
   return f
 end

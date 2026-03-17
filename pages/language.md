@@ -34,6 +34,8 @@ end
 As mentioned, you might want to change the repulsive force into an attraction, if you want to aggregate robots, for example. Try as well to have a force that tries to force a specific distance between robots. This creates interesting crystal shapes as a swarm!
 
 
+## Communication
+Using RAB for synchronisation (and using lights)
 
 ## Minimal Naming  Game
 

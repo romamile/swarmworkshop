@@ -80,9 +80,9 @@ local sensingRight = robot.proximity[5].value + robot.proximity[6].value +
 if( sensingLeft + sensingRight == 0 ) then -- no sensor are sensing something, so all at 0
   driveAsCar(10,0)
 elseif( sensingRight > sensingLeft ) then
-  driveAsCar(7,-3)
+  driveAsCar(7, 3)
 else
-  driveAsCar(7,3)
+  driveAsCar(7, -3)
 end
 ```
 
@@ -139,11 +139,13 @@ local leftSpeed = 5
 local rightSpeed = 5
 
 if(robot.ground.left < 0.40) then -- something on my left
-  rightSpeed = -3
+  leftSpeed = -3
+  rightSpeed = 5
 end
 
 if(robot.ground.right < 0.40) then -- something on my right
-  leftSpeed = -3
+  leftSpeed = 5
+  rightSpeed = -3
 end
 
 robot.wheels.set_velocity(leftSpeed, rightSpeed)

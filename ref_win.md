@@ -38,4 +38,8 @@ One important thing to keep in mind, everytime you login to your system, you nee
 cd ~
 ```
 
+One thing to keep in mind, for when you go back to WSL. You might not be in the right folder. To go in the correct folder, please do `cd /home/PERSONAL_USER/ARGO_DIRECTORY` with your correct personal user (there should be only one, use `ls` in `\home\` if you don't know it) and the correct argos directory you created.
+
+Some users had their ARGoS window randomly freezes. While we are still not sure why, in order to unfreeze them, have the window in focus (click on it) and then press Win + Left (or any other directions). This should solve that issue.
+
 And now you are done. Please go back to the [setting up page](./pages/setting-up.html) to continue with the instalation process.
