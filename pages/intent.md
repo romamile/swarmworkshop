@@ -35,7 +35,7 @@ The underlying idea is simple: you apply one, or multiple, force to a robot, and
 
 The most common way to represent a force is to do so as a vector. Lua doesn't have a specific structure for vectors, but ARGoS does. To learn more about how to create and use vectores, check the documentation [here](./ref_vector.html)
 
-So, we start from a force (a 2D vector) that we want to transform into a speed value for both left and right wheels. I warn you in advance, there will be a bit of trigonometry! Any idea how to make it happen? Here is an eaample of such implementation. First the function itself:
+So, we start from a force (a 2D vector) that we want to transform into a speed value for both left and right wheels. I warn you in advance, there will be a bit of trigonometry! Any idea how to make it happen? Here is an example of such implementation. First the function itself:
 
 ```lua
 
@@ -96,7 +96,7 @@ function proximity_to_force()
     dir:rotate(angle)
 
     -- and we add it as a repulsive force
-    f = f - dir * value
+    f = f + dir * value
   end
 
   return f
@@ -109,10 +109,12 @@ Congratulations, you have now your first *sensor to force* function! The aim is 
 ```lua
   local fProx = proximity_to_force()
 
-  local sumF = fProx               -- Not a lot to add, but good for later!
+  local sumForce = fProx               -- I wonder if I am not missing something here...
 
   force_to_wheels(sumForce)
 ```
+
+Soooo you might see an issue already: the robots are being attracted to each other and to walls, and not avoiding objects! This is because the force is used here as an attractor. You might want to put a negative sign in front of it, to use it as a repulsor: `local sumForce = - fProx`.
 
 Obstacle avoidance is a common behavior that is used in many navigation algorithme. But ... what if robots where not repulsed by others objects, but attracted to them? How could you change your code to reflect that? And how would you name this new behavior?
 
@@ -147,10 +149,9 @@ So now, you have multiple forces of various lengths (and hence influences). The 
 local proxF = proximity_to_force()
 local lightF = light_to_force()
 
-local sumF = 10 * proxF + 3 * lightF
-sumF:normalize()
+local sumForce = 0.7* proxF + 0.3 * lightF
 
-force_to_wheels(sumF)
+force_to_wheels(sumForce)
 
 ```
 
