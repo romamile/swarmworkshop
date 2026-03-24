@@ -1,6 +1,6 @@
 ---
 layout: default
 title:  "Braintenberg's Vehicles"
-num: 5
+num: 6
 ---
 

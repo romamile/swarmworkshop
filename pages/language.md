@@ -1,41 +1,8 @@
 ---
 layout: default
 title:  "Language"
-num: 3
+num: 5
 ---
-
-
-While our robots are not yet foraging, they are already engaged in an exploratory task (or even in a seeking task if you kept the light). This creates already an interesting dynamic as the network is both spatially structured and dynamic. So now, let's introduce communication to our robots!
-
-
-## Reaching out
-Range and bearing is both a recognition system between robots, as well as a communication system. It gives you the range - distance, and the bearing - angle, between you and any other robots, and allow you to share a payload - data with them.
-
-Here, we will use it as a detection system and use it similarly as the proximity sensor (e.g., the closer another robot is, the bigger the force that points away from the other robot). While this is yet another repulsion force between robots, it can as well be adjusted to be an attraction force between robots, or even an inbetween (repulsion if too close, attraction if too far). While avoidance in this context only works with robots (and not walls or boxes), the range of detection is bigger than the one of the proximity sensor. While proximity helps with avoiding immediate collision, range and bearing controls the swarm structure, helping to achieve better and smoother movement between robots.
-
-```lua
-function rab_to_force()
-  local f = vector2(0, 0)
-
-  for i = 1, #robot.range_and_bearing do
-    local p = robot.range_and_bearing[i]
-
-    local dir = vector2(1, 0)
-    dir:rotate(p.bearing)
-
-    local w = 1 / (p.range + 0.01)  -- avoid divide by zero
-    f = f - dir * w
-  end
-
-  return f
-end
-```
-
-As mentioned, you might want to change the repulsive force into an attraction, if you want to aggregate robots, for example. Try as well to have a force that tries to force a specific distance between robots. This creates interesting crystal shapes as a swarm!
-
-
-## Communication
-Using RAB for synchronisation (and using lights)
 
 ## Minimal Naming  Game
 
