@@ -126,7 +126,7 @@ function step()
   if target then target = update_vector_with_odometry(target) end
 
   -- detect zones
-  local on_resource = robot.ground.center > GREY_THRESHOLD and robot.ground.center < 0.7
+  local on_resource = robot.ground.center > BLACK_THRESHOLD and robot.ground.center < GREY_THRESHOLD
   local on_nest     = robot.ground.center < BLACK_THRESHOLD
 
   if on_resource then
