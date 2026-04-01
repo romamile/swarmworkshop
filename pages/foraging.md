@@ -73,7 +73,7 @@ You can add noise in the configuration file. Below is an example of how you woul
 
 ```xml
 <sensors>
-    <epuck_range_and_bearing implementation="medium" medium="rab" show_rays="false" data_size="2" noise_std_dev="0.0" real_range_noise="false" max_packets="UINT32_MAX" loss_probability="0.0"/>
+    <epuck_range_and_bearing implementation="medium" medium="rab" show_rays="false" data_size="2" noise_std_dev="0.0" real_range_noise="false" max_packets="100" loss_probability="0.0"/>
     <epuck_proximity implementation="default" noise_level="0.1"/>
     <epuck_light implementation="default" noise_level="0.1"/>
     <epuck_ground implementation="rot_z_only" noise_level="0.1"/>
@@ -189,7 +189,7 @@ function step()
 
 
   wProx = -10
-  wRand = 1se
+  wRand = 1
   wTarg = 1
   wRAB = -1
 
