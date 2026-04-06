@@ -69,16 +69,37 @@ Here 100 is chosen somewhat arbitrarily, to obtain a comfortable force magnitude
 ### Presence
 Let's explore different ways to use presence as a communication protocol. Now that you can define specific robot states using a finite state machine, you can assign some robots as *pillars*, which would signal dangerous areas to others, allowing them to avoid these regions. This force can also be used to make the robots spread out, while maintaining cohesion. For instance, a repulsive force when robots are too close, and an attractive one when they are too far apart. Try to imagine a way to implement such behaviors.
 
-Below is a solution for the repulsive/attractive force, using a U-shaped potential function. You only need to change the line defining the strength of the function:
+Below is a solution for the repulsive/attractive force, using the [Lennard-Jones potential](https://en.wikipedia.org/wiki/Lennard-Jones_potential). I would not recommend using both the `rab_to_force` and this function at the same time, so be sure to associate the forces with correct weights! (like zero for the rab, while you test this new force):
 
 ```lua
-    local target = 30 -- the desired distance (in cm)
+function rab_keep_distance(target_dist)
+  local f = vector2(0, 0)
 
-    local delta = p.range - target
-    local w = delta * (1 + delta*delta)
+  -- desired inter-robot distance
+--  local target_dist = 35
+  local EPSILON = 50
+  local MIN_RANGE = 0.01  -- safety to avoid division by zero
+
+  for _, p in ipairs(robot.range_and_bearing) do
+    local d = math.max(p.range, MIN_RANGE)
+
+    -- Lennard-Jones style interaction
+    -- positive = attraction, negative = repulsion
+    local lj = -(4 * EPSILON / d) *
+               ((target_dist / d)^4 - (target_dist / d)^2)
+
+    local dir = vector2(1, 0)
+    dir:rotate(p.bearing)
+
+    f = f + dir * lj
+  end
+
+  return f
+end
 ```
 
-This works, but the robots remain in constant motion, without any equilibrium or structure emerging. Try exploring other approaches for the robots to spread in a more homogeneous manner.
+This function takes a parameter, the desired distance between robots. So in order to call it in your sum of force you need to feed it a parametere, such as `rab_keep_distance(20)`.
+
 
 Finally, what would happen if some robots were trying to avoid each other, while others simply roam around the arena? If you want to assign different roles to your robots, you can either choose them at random, or assign them based on the `robot.id` (in the form *ep + number*).
 

@@ -159,3 +159,7 @@ end
 
 With all code, the robots can now play a MNG, and it is up to you to change their behavior, would it be giving them a task to do, and to see how it impact the language dymanics, or make changes to the MNG and see what happens then!
 
+
+
+## Grounded Game
+A game where you link specifics from the environment to words. Unfortunately, this is still a work in progress, as it requires a working shared frame of reference (mentioned in the last section) between robots, which is still out of scope for this workshop. Don't hesitate to contact me if you want working code, and if not, I will do my best to update this page soon!

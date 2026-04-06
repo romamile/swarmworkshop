@@ -44,23 +44,31 @@ MAX_SPEED = 10
 
 
 function force_to_wheels(f)
-
-    -- angle of the force through the magic of the arctan function
+  -- We get the angle of the force f with the magic of the function arctan
   local a = math.atan(f.y, f.x)
 
-    -- strenght of the turn (ratio between angle and PI)
-  local s = math.abs(a) / math.pi
-
-    -- overall speed (from lenght of the force vector)
-  local m = math.min(f:length(), 1)
-
-  if a > 0 then -- turning direction depending on the sign of a
-    left = m * MAX_SPEED * (1 - s)
-    right = m * MAX_SPEED
-  else
-    left = m * MAX_SPEED
-    right = m * MAX_SPEED * (1 - s)
+  -- We define the forward intensity as:
+  -- math.cos(a) when ahead, 0 when at 90° or more
+  -- This forces robot to turn on itself when not facing the direction of the force
+  local forward = math.cos(a)
+  if forward < 0 then
+    forward = 0
   end
+
+  -- turning intensity
+  -- Defines how strong we turn toward our aim
+  local K_TURN = 5
+  local turn = K_TURN * a
+
+  -- Similar to drive as a car, as to handle turning
+  local left  = MAX_SPEED * forward - turn
+  local right = MAX_SPEED * forward + turn
+
+  -- optional clamp to avoid excessive wheel speeds
+  if left > MAX_SPEED then left = MAX_SPEED end
+  if left < -MAX_SPEED then left = -MAX_SPEED end
+  if right > MAX_SPEED then right = MAX_SPEED end
+  if right < -MAX_SPEED then right = -MAX_SPEED end
 
   robot.wheels.set_velocity(left, right)
 end
@@ -95,7 +103,7 @@ function proximity_to_force()
     local dir = vector2(1, 0)
     dir:rotate(angle)
 
-    -- and we add it as a repulsive force
+    -- and we add it as an attractive force
     f = f + dir * value
   end
 
@@ -161,26 +169,36 @@ Finding the correct weights for the behavior you want to achieve can be finicky,
 Similarly to our previous obstacle avoidance force, how would you change your code so that robots are not attracted to the light, but try to hide from it? Try to play around with those forces, and their intensity. You have everything in your hand already to create [Braitenberg vehicle](https://en.wikipedia.org/wiki/Braitenberg_vehicle.)
 
 ## Random walk
-And last, let's create the basis of all exploratory behaviors: a random walk. Because sometimes, you can't rely on bumping in walls for exploring an area.
-
+And last, let's create the basis of all exploratory behaviors: a random walk. Because sometimes, you can't rely on bumping in walls for exploring an area. In this implementation of a random walk, the robot will first decide a random force to rotate toward, then rotate in that direction for a specific number of steps (RW_TURN_DURATION), and then will move forward for the rest of the cycle, before repeating the same cycle over and over and over and ... 
 
 ```lua
--- global variable to be put at the root
-angle = 0
+RW_TURN_DURATION = 6
+RW_FORWARD_DURATION = 20
+
+-- Random initialisation of the counter, so not all robots switch together
+rw_counter = math.floor( math.random() * 1000 )
+rw_turn_angle = 0
 
 function random_walk_force()
+  -- Duration of a whole cycle
+  local cycle = RW_TURN_DURATION + RW_FORWARD_DURATION
+  rw_counter = (rw_counter % cycle) + 1
 
-    -- measure of the drift
-  local k = math.pi
+  -- choose a new random turning direction at the beginning of each cycle
+  if rw_counter == 1 then
+    rw_turn_angle = (math.random() - 0.5) * math.pi
+  end
 
-    -- adding at each step a variation on our current angle
-  angle = angle + k * (math.random() - 0.5) * 0.5
-
-  local f = vector2(1, 0)
-  f:rotate(angle)
-
-  return f
+  if rw_counter <= RW_TURN_DURATION then -- First part of the cycle: rotate
+    local f = vector2(1, 0)
+    f:rotate(rw_turn_angle)
+    return f
+  else  -- Second part of the cycle: go forward
+    return vector2(1, 0)
+  end
 end
+-- global variable to be put at the root
+angle = 0
 ```
 
 
