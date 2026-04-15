@@ -120,7 +120,7 @@ In this simple version, the speaker always sends the first word in its vocabular
 The hearer checks incoming messages. If it receives a game request addressed to itself, it decides whether the word is already in its vocabulary.
 
 ```lua
-local function hearer_step()
+function hearer_step()
 
   -- parsing through all messages received
   for i = 1, #robot.range_and_bearing do
