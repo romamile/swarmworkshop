@@ -6,7 +6,7 @@ num: 5
 
 By now you are getting used to Lua, ARGoS, and creating simple artificial behavior. In this session, we will introduce [language games](https://langev.com/pdf/steels01languageGames.pdf). While it would be easy to see it as just code for a single experiment, this is more of an occasion for you to rethink every step you have made so far. How would this language game play if the robots were static, or just a few spread around the arena, or foraging, or leading each other, etc. etc. You are going to see how to implement the simplest language game and it will then be up to you to test it in the numerous ecological contexts you have already created in the past sessions, as well as to tweak it and explore variations.
 
-For the sake of simplicity, you can find [here](romamile.com/swlang/assets/setup/swarm_lang.zip) a zipped folder with all the sub-functions in a simple code file, as well as the different behaviors from this course.
+For the sake of simplicity, you can find [here](https://romamile.com/swlang/assets/setup/swarm_lang.zip) a zipped folder with all the sub-functions in a simple code file, as well as the different behaviors from this course.
 
 ## Minimal Naming  Game
 
